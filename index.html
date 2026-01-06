@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Граматика БГ - Учи български език забавно!</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @keyframes bounce-in {
             0% { transform: scale(0); }
@@ -18,6 +19,16 @@
             75% { transform: translateX(10px); }
         }
         
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes confetti {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
         .celebration {
             animation: bounce-in 0.5s ease-out;
         }
@@ -26,149 +37,239 @@
             animation: shake 0.5s ease-out;
         }
         
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
         .dragging {
             opacity: 0.5;
             transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
         }
         
         body {
             background: linear-gradient(135deg, #fda4af 0%, #c084fc 50%, #93c5fd 100%);
             min-height: 100vh;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial Rounded MT Bold', sans-serif;
         }
         
         .gradient-text {
-            background: linear-gradient(to right, #9333ea, #ec4899);
+            background: linear-gradient(to right, #9333ea, #ec4899, #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        
+        .bubble {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        .word-bubble {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .word-bubble:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .correct-answer {
+            background: linear-gradient(to right, #10b981, #34d399) !important;
+            color: white !important;
+            transform: scale(1.05);
+        }
+        
+        .wrong-answer {
+            background: linear-gradient(to right, #ef4444, #f87171) !important;
+            color: white !important;
+            animation: shake 0.5s ease-out;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #e5e7eb;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #10b981, #3b82f6);
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
-<body class="p-8">
+<body class="p-4 md:p-8 overflow-x-hidden">
+    <!-- Floating Bubbles Background -->
+    <div id="bubblesContainer"></div>
+    
     <!-- Celebration Overlay -->
     <div id="celebrationOverlay" class="hidden fixed inset-0 flex items-center justify-center pointer-events-none z-50">
         <div class="text-9xl celebration">🎉</div>
+        <div id="confettiContainer"></div>
     </div>
 
-    <div class="max-w-6xl mx-auto">
+    <!-- Sound Toggle -->
+    <button id="soundToggle" class="fixed top-4 right-4 z-40 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform">
+        <i id="soundIcon" class="fas fa-volume-up text-2xl text-purple-600"></i>
+    </button>
+
+    <div class="max-w-6xl mx-auto relative z-10">
         <!-- Header -->
-        <div class="bg-white rounded-3xl shadow-2xl p-6 mb-8">
+        <div class="bg-white rounded-3xl shadow-2xl p-6 mb-8 border-4 border-yellow-300">
             <div class="flex items-center justify-between flex-wrap gap-4">
                 <div class="flex items-center gap-4">
-                    <div class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                        </svg>
+                    <div class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg float">
+                        <i class="fas fa-book-open text-3xl text-white"></i>
                     </div>
                     <div>
                         <h1 class="text-4xl font-bold gradient-text">Граматика БГ</h1>
-                        <p class="text-gray-600">Учи български език забавно!</p>
+                        <p class="text-gray-600 text-xl">Учи българска граматика забавно!</p>
                     </div>
                 </div>
                 
-                <div class="flex gap-6">
-                    <div class="text-center">
-                        <div class="flex items-center gap-2 bg-yellow-100 px-6 py-3 rounded-2xl">
-                            <svg class="w-8 h-8 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                            </svg>
+                <div class="flex gap-4 flex-wrap">
+                    <div class="text-center bg-gradient-to-r from-yellow-100 to-orange-100 px-6 py-3 rounded-2xl shadow-lg border-2 border-yellow-300">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-star text-2xl text-yellow-500"></i>
                             <span id="scoreDisplay" class="text-3xl font-bold text-yellow-700">0</span>
                         </div>
                         <p class="text-sm text-gray-600 mt-1">Точки</p>
                     </div>
                     
-                    <div class="text-center">
-                        <div class="flex items-center gap-2 bg-green-100 px-6 py-3 rounded-2xl">
-                            <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                            </svg>
+                    <div class="text-center bg-gradient-to-r from-green-100 to-emerald-100 px-6 py-3 rounded-2xl shadow-lg border-2 border-green-300">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-2xl text-green-500"></i>
                             <span id="correctDisplay" class="text-3xl font-bold text-green-700">0</span>
                         </div>
                         <p class="text-sm text-gray-600 mt-1">Верни</p>
                     </div>
+                    
+                    <div class="text-center bg-gradient-to-r from-blue-100 to-cyan-100 px-6 py-3 rounded-2xl shadow-lg border-2 border-blue-300">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-brain text-2xl text-blue-500"></i>
+                            <span id="levelDisplay" class="text-3xl font-bold text-blue-700">1</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Ниво</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="mt-6">
+                <div class="flex justify-between mb-1">
+                    <span class="text-gray-700 font-bold">Напредък</span>
+                    <span id="progressText" class="text-gray-700 font-bold">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill" style="width: 0%"></div>
                 </div>
             </div>
         </div>
 
         <!-- Subject Selection -->
-        <div class="bg-white rounded-3xl shadow-2xl p-6 mb-8">
-            <div class="flex gap-4 flex-wrap">
-                <button onclick="switchSubject('dragdrop')" id="btnDragDrop" class="flex-1 min-w-64 py-4 rounded-2xl font-bold text-xl transition-all bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg scale-105">
-                    📝 Попълни изречението
+        <div class="bg-white rounded-3xl shadow-2xl p-6 mb-8 border-4 border-purple-200">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Избери игра:</h2>
+            <div class="flex gap-4 flex-wrap justify-center">
+                <button onclick="switchSubject('dragdrop')" id="btnDragDrop" class="flex-1 min-w-64 py-5 rounded-2xl font-bold text-xl transition-all bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg scale-105 border-4 border-blue-400">
+                    <i class="fas fa-mouse-pointer mr-3"></i>Попълни изречението
                 </button>
                 
-                <button onclick="switchSubject('partsOfSpeech')" id="btnPartsOfSpeech" class="flex-1 min-w-64 py-4 rounded-2xl font-bold text-xl transition-all bg-gray-200 text-gray-700 hover:bg-gray-300">
-                    🎯 Части на речта
+                <button onclick="switchSubject('partsOfSpeech')" id="btnPartsOfSpeech" class="flex-1 min-w-64 py-5 rounded-2xl font-bold text-xl transition-all bg-gradient-to-r from-pink-400 to-orange-400 text-white hover:from-pink-500 hover:to-orange-500 border-4 border-pink-300">
+                    <i class="fas fa-font mr-3"></i>Части на речта
                 </button>
             </div>
         </div>
 
         <!-- Question Area -->
-        <div class="bg-white rounded-3xl shadow-2xl p-8 mb-8">
+        <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 mb-8 border-4 border-green-200">
             <!-- Loading State -->
-            <div id="loadingState" class="hidden text-center py-20">
-                <div class="w-20 h-20 border-8 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto"></div>
-                <p class="text-2xl text-gray-600 mt-4">Зареждам въпрос...</p>
+            <div id="loadingState" class="hidden text-center py-16">
+                <div class="w-24 h-24 border-8 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto"></div>
+                <p class="text-2xl text-gray-600 mt-6">Зареждам въпрос...</p>
+                <div class="mt-4 text-gray-500">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>Малко търпение!
+                </div>
             </div>
 
             <!-- Drag and Drop Question -->
             <div id="dragDropQuestion" class="space-y-8 hidden">
-                <div class="flex items-center gap-2 bg-white/50 p-4 rounded-2xl flex-wrap">
-                    <button onclick="speakText(currentQuestionText)" class="p-3 bg-purple-500 hover:bg-purple-600 rounded-full transition-all hover:scale-110">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
-                        </svg>
+                <div class="flex items-center gap-4 bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl border-2 border-blue-200">
+                    <button onclick="speakText(currentQuestionText)" class="p-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full transition-all hover:scale-110 shadow-lg">
+                        <i class="fas fa-volume-up text-2xl text-white"></i>
                     </button>
-                    <div id="sentenceDisplay" class="text-2xl font-bold text-gray-800 flex-1 flex flex-wrap items-center gap-3"></div>
+                    <div id="sentenceDisplay" class="text-2xl md:text-3xl font-bold text-gray-800 flex-1 flex flex-wrap items-center gap-3"></div>
                 </div>
                 
-                <div id="wordBank" class="flex flex-wrap gap-4 justify-center p-6 bg-gradient-to-r from-blue-100 to-purple-100 rounded-3xl min-h-32"></div>
+                <div class="text-center">
+                    <div class="inline-flex items-center bg-yellow-100 px-6 py-2 rounded-full mb-4">
+                        <i class="fas fa-hand-point-up text-yellow-600 mr-2"></i>
+                        <span class="text-lg font-bold text-yellow-700">Влачи думите на празните места!</span>
+                    </div>
+                </div>
+                
+                <div id="wordBank" class="flex flex-wrap gap-4 justify-center p-6 bg-gradient-to-r from-blue-100 to-purple-100 rounded-3xl min-h-40 border-2 border-dashed border-blue-300"></div>
             </div>
 
             <!-- Parts of Speech Question -->
             <div id="partsOfSpeechQuestion" class="space-y-8 hidden">
                 <!-- Explanation Mode -->
                 <div id="explanationMode" class="hidden space-y-6">
-                    <div class="bg-gradient-to-r from-yellow-100 to-orange-100 p-8 rounded-3xl shadow-lg">
+                    <div class="bg-gradient-to-r from-yellow-100 to-orange-100 p-6 md:p-8 rounded-3xl shadow-lg border-4 border-orange-300">
                         <div class="flex items-center gap-3 mb-4">
-                            <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                            </svg>
+                            <div class="w-16 h-16 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg">
+                                <i class="fas fa-lightbulb text-3xl text-white"></i>
+                            </div>
                             <h3 id="explanationTitle" class="text-3xl font-bold text-orange-700"></h3>
                         </div>
-                        <button onclick="speakText(currentExplanationText)" class="mb-4 p-3 bg-orange-500 hover:bg-orange-600 rounded-full transition-all hover:scale-110">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
-                            </svg>
-                        </button>
+                        
+                        <div class="flex items-center gap-4 mb-6">
+                            <button onclick="speakText(currentExplanationText)" class="p-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 rounded-full transition-all hover:scale-110 shadow">
+                                <i class="fas fa-volume-up text-xl text-white"></i>
+                            </button>
+                            <p class="text-gray-700 text-lg">Натисни за да чуеш обяснението!</p>
+                        </div>
+                        
                         <p id="explanationText" class="text-xl text-gray-700 leading-relaxed mb-6"></p>
                         
-                        <div class="bg-white p-6 rounded-2xl">
-                            <h4 class="text-xl font-bold text-gray-700 mb-3">Примери:</h4>
+                        <div class="bg-white p-6 rounded-2xl border-2 border-orange-200">
+                            <h4 class="text-xl font-bold text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-list-ul text-orange-500 mr-2"></i>Примери:
+                            </h4>
                             <div id="examplesList"></div>
                         </div>
                     </div>
                     
-                    <button onclick="continueAfterExplanation()" class="w-full py-4 bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white text-2xl font-bold rounded-2xl shadow-lg transition-all hover:scale-105">
-                        Готов съм да практикувам! 🚀
+                    <button onclick="continueAfterExplanation()" class="w-full py-5 bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white text-2xl font-bold rounded-2xl shadow-lg transition-all hover:scale-105 border-4 border-green-300">
+                        <i class="fas fa-rocket mr-3"></i>Готов съм да практикувам!
                     </button>
                 </div>
 
                 <!-- Practice Mode -->
                 <div id="practiceMode" class="hidden space-y-8">
-                    <div class="flex items-center gap-2 bg-white/50 p-6 rounded-2xl flex-wrap">
-                        <button onclick="speakCurrentPartQuestion()" class="p-3 bg-purple-500 hover:bg-purple-600 rounded-full transition-all hover:scale-110">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
-                            </svg>
+                    <div class="flex items-center gap-4 bg-gradient-to-r from-pink-50 to-purple-50 p-6 rounded-2xl border-2 border-pink-200">
+                        <button onclick="speakCurrentPartQuestion()" class="p-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full transition-all hover:scale-110 shadow">
+                            <i class="fas fa-volume-up text-xl text-white"></i>
                         </button>
                         <div class="text-2xl font-bold text-gray-800">
-                            Натисни на <span id="partToFind" class="text-purple-600"></span> в изречението:
+                            Натисни на <span id="partToFind" class="text-purple-600 bg-purple-100 px-3 py-1 rounded-xl"></span> в изречението:
                         </div>
                     </div>
                     
-                    <div class="bg-gradient-to-r from-pink-100 to-purple-100 p-8 rounded-3xl">
-                        <div id="wordsToClick" class="text-3xl font-bold text-gray-800 flex flex-wrap gap-4 justify-center"></div>
+                    <div class="bg-gradient-to-r from-pink-100 to-purple-100 p-6 md:p-8 rounded-3xl border-4 border-pink-300">
+                        <div id="wordsToClick" class="text-2xl md:text-3xl font-bold text-gray-800 flex flex-wrap gap-4 justify-center"></div>
                     </div>
                 </div>
             </div>
@@ -176,26 +277,58 @@
 
         <!-- Action Buttons -->
         <div class="flex gap-4 flex-wrap">
-            <button onclick="generateQuestion()" class="flex-1 min-w-64 py-4 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white text-xl font-bold rounded-2xl shadow-lg transition-all hover:scale-105">
-                ⏭️ Следващ въпрос
+            <button onclick="generateQuestion()" class="flex-1 min-w-64 py-5 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white text-xl font-bold rounded-2xl shadow-lg transition-all hover:scale-105 border-4 border-cyan-300">
+                <i class="fas fa-forward mr-3"></i>Следващ въпрос
             </button>
             
-            <button id="testButton" onclick="startTest()" class="hidden flex-1 min-w-64 py-4 bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white text-xl font-bold rounded-2xl shadow-lg transition-all hover:scale-105">
-                🏆 Започни тест
+            <button id="testButton" onclick="startTest()" class="hidden flex-1 min-w-64 py-5 bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white text-xl font-bold rounded-2xl shadow-lg transition-all hover:scale-105 border-4 border-green-300">
+                <i class="fas fa-trophy mr-3"></i>Започни тест
+            </button>
+            
+            <button onclick="resetProgress()" class="flex-1 min-w-64 py-5 bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 text-white text-xl font-bold rounded-2xl shadow-lg transition-all hover:scale-105 border-4 border-red-300">
+                <i class="fas fa-redo mr-3"></i>Нова игра
             </button>
         </div>
 
         <!-- Test Mode Indicator -->
-        <div id="testModeIndicator" class="hidden mt-6 bg-gradient-to-r from-yellow-200 to-orange-200 p-6 rounded-2xl text-center">
-            <p class="text-2xl font-bold text-orange-700">
-                Тест режим: <span id="testProgress">0/0</span> верни (Нужни 4/5 за да минеш)
-            </p>
+        <div id="testModeIndicator" class="hidden mt-6 bg-gradient-to-r from-yellow-200 to-orange-200 p-6 rounded-2xl text-center border-4 border-yellow-300">
+            <div class="flex items-center justify-center gap-3">
+                <i class="fas fa-clipboard-check text-3xl text-orange-600"></i>
+                <p class="text-2xl font-bold text-orange-700">
+                    Тест режим: <span id="testProgress" class="bg-white px-4 py-1 rounded-full">0/0</span> верни (Нужни 4/5 за да минеш)
+                </p>
+            </div>
         </div>
 
         <!-- Learned Parts -->
-        <div id="learnedParts" class="hidden mt-6 bg-white rounded-2xl shadow-lg p-6">
-            <h3 class="text-xl font-bold text-gray-700 mb-3">Научени части на речта:</h3>
+        <div id="learnedParts" class="hidden mt-6 bg-white rounded-2xl shadow-lg p-6 border-4 border-green-200">
+            <h3 class="text-xl font-bold text-gray-700 mb-3 flex items-center">
+                <i class="fas fa-graduation-cap text-green-500 mr-2"></i>Научени части на речта:
+            </h3>
             <div id="learnedPartsList" class="flex flex-wrap gap-3"></div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="mt-8 bg-white rounded-2xl shadow-lg p-6 border-4 border-blue-200">
+            <h3 class="text-xl font-bold text-gray-700 mb-4 text-center">Твоята статистика</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
+                    <div class="text-3xl font-bold text-blue-600" id="totalQuestions">0</div>
+                    <p class="text-gray-600">Общо въпроси</p>
+                </div>
+                <div class="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-200">
+                    <div class="text-3xl font-bold text-green-600" id="accuracyRate">0%</div>
+                    <p class="text-gray-600">Точност</p>
+                </div>
+                <div class="text-center p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200">
+                    <div class="text-3xl font-bold text-yellow-600" id="streakCount">0</div>
+                    <p class="text-gray-600">Верни подред</p>
+                </div>
+                <div class="text-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border-2 border-purple-200">
+                    <div class="text-3xl font-bold text-purple-600" id="timePlayed">0м</div>
+                    <p class="text-gray-600">Време в игра</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -216,23 +349,221 @@
         let draggedItems = {};
         let currentQuestionText = '';
         let currentExplanationText = '';
+        let soundEnabled = true;
+        let totalQuestions = 0;
+        let currentStreak = 0;
+        let maxStreak = 0;
+        let startTime = Date.now();
+        let level = 1;
 
-        const partsOfSpeech = [
-            { name: 'Съществително', description: 'Думи, които означават хора, животни, предмети или места' },
-            { name: 'Глагол', description: 'Думи, които показват действие или състояние' },
-            { name: 'Прилагателно', description: 'Думи, които описват съществителни имена' },
-            { name: 'Местоимение', description: 'Думи, които заместват съществителни имена' },
-            { name: 'Наречие', description: 'Думи, които описват как, кога, къде или колко се случва действието' },
+        // Question Banks (No API needed!)
+        const dragDropQuestions = [
+            // Level 1 (1 blank)
+            {
+                sentence: "Котката ___BLANK___ на дървото.",
+                correctWords: ["се катери"],
+                distractors: ["плува", "лети", "говори"]
+            },
+            {
+                sentence: "Момчето ___BLANK___ топката.",
+                correctWords: ["търкаля"],
+                distractors: ["пее", "рисува", "чета"]
+            },
+            {
+                sentence: "Слънцето ___BLANK___ ярко.",
+                correctWords: ["сияе"],
+                distractors: ["спи", "плаче", "бяга"]
+            },
+            {
+                sentence: "Аз ___BLANK___ ябълка.",
+                correctWords: ["ям"],
+                distractors: ["пия", "пиша", "чета"]
+            },
+            {
+                sentence: "Птицата ___BLANK___ в небето.",
+                correctWords: ["лети"],
+                distractors: ["плува", "ходи", "спи"]
+            },
+            // Level 2 (2 blanks)
+            {
+                sentence: "Децата ___BLANK___ и ___BLANK___ в парка.",
+                correctWords: ["бягат", "играят"],
+                distractors: ["спят", "учат", "пишат", "четат"]
+            },
+            {
+                sentence: "Майка ___BLANK___ торта и я ___BLANK___.",
+                correctWords: ["пече", "слага"],
+                distractors: ["яде", "пие", "мие", "суши"]
+            },
+            {
+                sentence: "Вчера ___BLANK___ и аз ___BLANK___ вкъщи.",
+                correctWords: ["валеше", "останах"],
+                distractors: ["светеше", "отидох", "бягах", "четох"]
+            },
+            // Level 3 (3 blanks)
+            {
+                sentence: "Кучето ___BLANK___, ___BLANK___ и ___BLANK___ в градината.",
+                correctWords: ["тича", "играе", "лая"],
+                distractors: ["лети", "пие", "спи", "пее", "рисува"]
+            }
         ];
 
-        // Text to Speech
+        const partsOfSpeechData = [
+            {
+                name: 'Съществително',
+                description: 'Съществителните са думи, които означават хора, животни, предмети, места или понятия. Те отговарят на въпросите "кой?" или "какво?".',
+                examples: ['момче', 'котка', 'училище', 'книга', 'софия'],
+                color: 'from-blue-400 to-cyan-500'
+            },
+            {
+                name: 'Глагол',
+                description: 'Глаголите са думи, които показват действие или състояние. Те казват какво се случва или какво някой прави.',
+                examples: ['ходя', 'чета', 'пиша', 'бягам', 'спя'],
+                color: 'from-green-400 to-emerald-500'
+            },
+            {
+                name: 'Прилагателно',
+                description: 'Прилагателните са думи, които описват съществителни. Те казват какъв, каква, какво или какви е нещо.',
+                examples: ['голям', 'малък', 'червен', 'бърз', 'красив'],
+                color: 'from-yellow-400 to-orange-500'
+            },
+            {
+                name: 'Местоимение',
+                description: 'Местоименията са думи, които заместват съществителни. Използват се, за да не повтаряме едно и също име много пъти.',
+                examples: ['аз', 'ти', 'той', 'тя', 'ние'],
+                color: 'from-purple-400 to-pink-500'
+            },
+            {
+                name: 'Наречие',
+                description: 'Наречията са думи, които описват как, кога, къде или колко се случва нещо. Те описват глаголи, прилагателни или други наречия.',
+                examples: ['бързо', 'бавно', 'тук', 'днес', 'много'],
+                color: 'from-red-400 to-pink-500'
+            }
+        ];
+
+        const partOfSpeechQuestions = [
+            // Съществително
+            {
+                sentence: "Котката спи на дивана.",
+                words: ["Котката", "спи", "на", "дивана"],
+                correctIndex: 0,
+                partToFind: "Съществително"
+            },
+            {
+                sentence: "Учителят чете книга.",
+                words: ["Учителят", "чете", "книга"],
+                correctIndex: 0,
+                partToFind: "Съществително"
+            },
+            {
+                sentence: "Децата играят в парка.",
+                words: ["Децата", "играят", "в", "парка"],
+                correctIndex: 0,
+                partToFind: "Съществително"
+            },
+            // Глагол
+            {
+                sentence: "Птицата лети в небето.",
+                words: ["Птицата", "лети", "в", "небето"],
+                correctIndex: 1,
+                partToFind: "Глагол"
+            },
+            {
+                sentence: "Майка готви вечеря.",
+                words: ["Майка", "готви", "вечеря"],
+                correctIndex: 1,
+                partToFind: "Глагол"
+            },
+            // Прилагателно
+            {
+                sentence: "Голямото дърво е зелено.",
+                words: ["Голямото", "дърво", "е", "зелено"],
+                correctIndex: 0,
+                partToFind: "Прилагателно"
+            },
+            {
+                sentence: "Червената ябълка е вкусна.",
+                words: ["Червената", "ябълка", "е", "вкусна"],
+                correctIndex: 0,
+                partToFind: "Прилагателно"
+            },
+            // Смесени
+            {
+                sentence: "Бързо тичам към училище.",
+                words: ["Бързо", "тичам", "към", "училище"],
+                correctIndex: 0,
+                partToFind: "Наречие"
+            },
+            {
+                sentence: "Тя рисува красива картина.",
+                words: ["Тя", "рисува", "красива", "картина"],
+                correctIndex: 0,
+                partToFind: "Местоимение"
+            }
+        ];
+
+        // Initialize game
+        function initGame() {
+            loadProgress();
+            createBubbles();
+            updateUI();
+            updateStats();
+            generateQuestion();
+            
+            // Start time tracking
+            setInterval(updateStats, 60000); // Update every minute
+            
+            // Sound toggle
+            document.getElementById('soundToggle').addEventListener('click', toggleSound);
+        }
+
+        // Create floating bubbles
+        function createBubbles() {
+            const container = document.getElementById('bubblesContainer');
+            const colors = ['#fda4af', '#c084fc', '#93c5fd', '#fbbf24', '#34d399'];
+            
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 60 + 20;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+                bubble.style.opacity = Math.random() * 0.3 + 0.1;
+                bubble.style.animation = `float ${Math.random() * 10 + 10}s infinite ease-in-out`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(bubble);
+            }
+        }
+
+        // Text to Speech using Web Speech API (no API key needed)
         function speakText(text) {
+            if (!soundEnabled) return;
+            
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
+                
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'bg-BG';
                 utterance.rate = 0.9;
+                utterance.pitch = 1.2; // Higher pitch for child-like voice
+                utterance.volume = 1;
+                
+                // Try to get a child-like voice if available
+                const voices = window.speechSynthesis.getVoices();
+                const bulgarianVoice = voices.find(voice => 
+                    voice.lang === 'bg-BG' || voice.lang.startsWith('bg')
+                );
+                
+                if (bulgarianVoice) {
+                    utterance.voice = bulgarianVoice;
+                }
+                
                 window.speechSynthesis.speak(utterance);
+            } else {
+                console.log("Speech synthesis not supported");
             }
         }
 
@@ -242,142 +573,219 @@
             speakText(`Натисни на ${partName} в изречението: ${sentence}`);
         }
 
+        // Toggle sound
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            if (soundEnabled) {
+                icon.className = 'fas fa-volume-up text-2xl text-purple-600';
+                speakText("Звукът е включен!");
+            } else {
+                icon.className = 'fas fa-volume-mute text-2xl text-gray-500';
+                window.speechSynthesis.cancel();
+            }
+        }
+
         // Switch Subject
         function switchSubject(subject) {
             currentSubject = subject;
             isExplaining = false;
             
             document.getElementById('btnDragDrop').className = subject === 'dragdrop' 
-                ? 'flex-1 min-w-64 py-4 rounded-2xl font-bold text-xl transition-all bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg scale-105'
-                : 'flex-1 min-w-64 py-4 rounded-2xl font-bold text-xl transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
+                ? 'flex-1 min-w-64 py-5 rounded-2xl font-bold text-xl transition-all bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg scale-105 border-4 border-blue-400'
+                : 'flex-1 min-w-64 py-5 rounded-2xl font-bold text-xl transition-all bg-gradient-to-r from-blue-400 to-purple-400 text-white hover:from-blue-500 hover:to-purple-500 border-4 border-blue-300';
             
             document.getElementById('btnPartsOfSpeech').className = subject === 'partsOfSpeech' 
-                ? 'flex-1 min-w-64 py-4 rounded-2xl font-bold text-xl transition-all bg-gradient-to-r from-pink-500 to-orange-500 text-white shadow-lg scale-105'
-                : 'flex-1 min-w-64 py-4 rounded-2xl font-bold text-xl transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
+                ? 'flex-1 min-w-64 py-5 rounded-2xl font-bold text-xl transition-all bg-gradient-to-r from-pink-500 to-orange-500 text-white shadow-lg scale-105 border-4 border-pink-400'
+                : 'flex-1 min-w-64 py-5 rounded-2xl font-bold text-xl transition-all bg-gradient-to-r from-pink-400 to-orange-400 text-white hover:from-pink-500 hover:to-orange-500 border-4 border-pink-300';
             
             generateQuestion();
         }
 
-        // Show celebration
+        // Show celebration with confetti
         function showCelebration() {
             const overlay = document.getElementById('celebrationOverlay');
             overlay.classList.remove('hidden');
-            setTimeout(() => overlay.classList.add('hidden'), 2000);
+            
+            // Create confetti
+            const confettiContainer = document.getElementById('confettiContainer');
+            confettiContainer.innerHTML = '';
+            const colors = ['#fbbf24', '#34d399', '#3b82f6', '#ec4899', '#8b5cf6'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = `${Math.random() * 15 + 5}px`;
+                confetti.style.height = `${Math.random() * 15 + 5}px`;
+                confetti.style.animation = `confetti ${Math.random() * 3 + 2}s linear forwards`;
+                confetti.style.animationDelay = `${Math.random() * 1}s`;
+                confettiContainer.appendChild(confetti);
+            }
+            
+            if (soundEnabled) {
+                // Play celebration sound (using Web Audio API)
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                } catch (e) {
+                    console.log("Audio not supported");
+                }
+            }
+            
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 2000);
         }
 
         // Update UI
         function updateUI() {
             document.getElementById('scoreDisplay').textContent = score;
             document.getElementById('correctDisplay').textContent = correctAnswers;
+            document.getElementById('levelDisplay').textContent = level;
             
-            if (correctAnswers >= 5 && !isTestMode) {
+            // Calculate progress percentage
+            const progress = Math.min(100, Math.floor((correctAnswers / (correctAnswers + wrongAnswers + 1)) * 100));
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${progress}%`;
+            
+            // Show test button after 5 correct answers
+            if (correctAnswers >= 5 && !isTestMode && currentSubject === 'partsOfSpeech') {
                 document.getElementById('testButton').classList.remove('hidden');
             }
             
+            // Show learned parts
             if (partsOfSpeechLearned.length > 0 && currentSubject === 'partsOfSpeech') {
                 document.getElementById('learnedParts').classList.remove('hidden');
                 const list = document.getElementById('learnedPartsList');
-                list.innerHTML = partsOfSpeechLearned.map(part => 
-                    `<div class="px-4 py-2 bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-xl font-bold shadow">✓ ${part}</div>`
-                ).join('');
+                list.innerHTML = partsOfSpeechLearned.map((part, index) => {
+                    const partData = partsOfSpeechData.find(p => p.name === part);
+                    const colorClass = partData ? partData.color : 'from-green-400 to-emerald-500';
+                    return `<div class="px-4 py-3 bg-gradient-to-r ${colorClass} text-white rounded-xl font-bold shadow-lg transform hover:scale-105 transition-transform">
+                        <i class="fas fa-check mr-2"></i>${part}
+                    </div>`;
+                }).join('');
             }
+            
+            // Update level based on score
+            const newLevel = Math.floor(score / 50) + 1;
+            if (newLevel > level) {
+                level = newLevel;
+                speakText(`Браво! Сега си на ниво ${level}!`);
+            }
+            
+            saveProgress();
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+            
+            const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+            document.getElementById('accuracyRate').textContent = `${accuracy}%`;
+            
+            document.getElementById('streakCount').textContent = currentStreak;
+            
+            const minutesPlayed = Math.floor((Date.now() - startTime) / 60000);
+            document.getElementById('timePlayed').textContent = `${minutesPlayed}м`;
         }
 
         // Generate Question
-        async function generateQuestion() {
+        function generateQuestion() {
             document.getElementById('loadingState').classList.remove('hidden');
             document.getElementById('dragDropQuestion').classList.add('hidden');
             document.getElementById('partsOfSpeechQuestion').classList.add('hidden');
             
-            let prompt = '';
-            
-            if (currentSubject === 'dragdrop') {
-                const blanks = difficulty === 1 ? 1 : difficulty === 2 ? 2 : 3;
-                prompt = `Generate a simple Bulgarian sentence suitable for children with ${blanks} word(s) missing. Return ONLY a JSON object with this exact structure:
-{
-  "sentence": "The sentence with ___BLANK___ markers where words should go",
-  "correctWords": ["word1", "word2"],
-  "distractors": ["wrong1", "wrong2", "wrong3"]
-}
-Make it about everyday topics kids understand. Ensure distractors are obviously wrong.`;
-            } else if (currentSubject === 'partsOfSpeech') {
-                if (!currentPartOfSpeech || isExplaining) {
-                    const nextPart = partsOfSpeech.find(p => !partsOfSpeechLearned.includes(p.name));
-                    if (nextPart) {
-                        currentPartOfSpeech = nextPart.name;
-                        isExplaining = true;
-                        prompt = `Explain "${nextPart.name}" (${nextPart.description}) in Bulgarian to a 4th grader with 2-3 simple examples. Then provide a simple sentence and ask the child to identify the ${nextPart.name}. Return ONLY a JSON object:
-{
-  "explanation": "Your explanation in Bulgarian",
-  "examples": ["example1", "example2"],
-  "sentence": "Test sentence",
-  "words": ["word1", "word2", "word3"],
-  "correctIndex": 0
-}`;
-                    } else {
-                        const learnedParts = partsOfSpeechLearned.join(', ');
-                        prompt = `Create a simple Bulgarian sentence with words that are: ${learnedParts}. Ask the child to identify one specific part. Return ONLY a JSON object:
-{
-  "sentence": "Test sentence",
-  "words": ["word1", "word2", "word3"],
-  "correctIndex": 0,
-  "partToFind": "Съществително"
-}`;
-                    }
-                } else {
-                    prompt = `Create a simple Bulgarian sentence for a 4th grader. Ask them to identify the ${currentPartOfSpeech}. Return ONLY a JSON object:
-{
-  "sentence": "Test sentence",
-  "words": ["word1", "word2", "word3", "word4"],
-  "correctIndex": 1
-}`;
-                }
-            }
-
-            try {
-                const response = await fetch("https://api.anthropic.com/v1/messages", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        model: "claude-sonnet-4-20250514",
-                        max_tokens: 1000,
-                        messages: [
-                            { role: "user", content: prompt }
-                        ],
-                    })
-                });
-
-                const data = await response.json();
-                const text = data.content.map(item => item.type === "text" ? item.text : "").join("\n");
-                const cleanText = text.replace(/```json|```/g, "").trim();
-                currentQuestion = JSON.parse(cleanText);
-                
-                renderQuestion();
-            } catch (error) {
-                console.error('Error generating question:', error);
-                // Fallback
+            // Simulate loading
+            setTimeout(() => {
                 if (currentSubject === 'dragdrop') {
-                    currentQuestion = {
-                        sentence: "Котката ___BLANK___ на дървото.",
-                        correctWords: ["се катери"],
-                        distractors: ["плува", "лети", "говори"]
-                    };
-                    renderQuestion();
+                    generateDragDropQuestion();
+                } else if (currentSubject === 'partsOfSpeech') {
+                    generatePartsOfSpeechQuestion();
                 }
-            }
-            
-            document.getElementById('loadingState').classList.add('hidden');
+                
+                document.getElementById('loadingState').classList.add('hidden');
+                totalQuestions++;
+                updateStats();
+            }, 500);
         }
 
-        // Render Question
-        function renderQuestion() {
-            if (currentSubject === 'dragdrop') {
-                renderDragDropQuestion();
-            } else if (currentSubject === 'partsOfSpeech') {
-                renderPartsOfSpeechQuestion();
+        // Generate Drag Drop Question
+        function generateDragDropQuestion() {
+            // Filter questions by difficulty
+            const availableQuestions = dragDropQuestions.filter(q => {
+                return q.correctWords.length <= difficulty;
+            });
+            
+            // Select random question
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = {...availableQuestions[randomIndex]};
+            
+            renderDragDropQuestion();
+        }
+
+        // Generate Parts of Speech Question
+        function generatePartsOfSpeechQuestion() {
+            document.getElementById('partsOfSpeechQuestion').classList.remove('hidden');
+            
+            if (!currentPartOfSpeech || isExplaining) {
+                // Find next part to teach
+                const nextPart = partsOfSpeechData.find(p => !partsOfSpeechLearned.includes(p.name));
+                
+                if (nextPart) {
+                    currentPartOfSpeech = nextPart.name;
+                    isExplaining = true;
+                    
+                    // Create explanation
+                    currentQuestion = {
+                        explanation: nextPart.description,
+                        examples: nextPart.examples,
+                        partToFind: nextPart.name
+                    };
+                    
+                    currentExplanationText = nextPart.description;
+                    
+                    renderPartsOfSpeechQuestion();
+                    return;
+                }
             }
+            
+            // Practice mode - find questions for current part of speech
+            const availableQuestions = partOfSpeechQuestions.filter(q => 
+                q.partToFind === currentPartOfSpeech || 
+                (currentPartOfSpeech === null && partsOfSpeechLearned.includes(q.partToFind))
+            );
+            
+            if (availableQuestions.length > 0) {
+                const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+                currentQuestion = {...availableQuestions[randomIndex]};
+            } else {
+                // Fallback question
+                currentQuestion = {
+                    sentence: "Котката спи на дивана.",
+                    words: ["Котката", "спи", "на", "дивана"],
+                    correctIndex: 0,
+                    partToFind: currentPartOfSpeech || "Съществително"
+                };
+            }
+            
+            isExplaining = false;
+            renderPartsOfSpeechQuestion();
         }
 
         // Render Drag and Drop
@@ -385,7 +793,7 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
             document.getElementById('dragDropQuestion').classList.remove('hidden');
             
             const parts = currentQuestion.sentence.split('___BLANK___');
-            currentQuestionText = currentQuestion.sentence.replace(/___BLANK___/g, '');
+            currentQuestionText = currentQuestion.sentence.replace(/___BLANK___/g, '______');
             
             const sentenceDisplay = document.getElementById('sentenceDisplay');
             sentenceDisplay.innerHTML = '';
@@ -394,30 +802,40 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
             parts.forEach((part, i) => {
                 const span = document.createElement('span');
                 span.textContent = part;
+                span.className = 'text-gray-800';
                 sentenceDisplay.appendChild(span);
                 
                 if (i < parts.length - 1) {
                     const dropZone = document.createElement('div');
-                    dropZone.className = 'inline-flex items-center justify-center min-w-32 h-16 border-4 border-dashed rounded-xl transition-all bg-yellow-100 border-yellow-400 hover:border-yellow-500 hover:scale-105';
+                    dropZone.className = 'inline-flex items-center justify-center min-w-32 h-16 border-4 border-dashed rounded-2xl transition-all bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-400 hover:border-yellow-500 hover:scale-105 cursor-pointer';
                     dropZone.dataset.slotIndex = i;
-                    dropZone.innerHTML = '<span class="text-yellow-600">___</span>';
+                    dropZone.innerHTML = '<span class="text-yellow-600 text-xl">______</span>';
                     
-                    dropZone.ondragover = (e) => e.preventDefault();
+                    dropZone.ondragover = (e) => {
+                        e.preventDefault();
+                        dropZone.classList.add('bg-yellow-200');
+                    };
+                    
+                    dropZone.ondragleave = () => {
+                        dropZone.classList.remove('bg-yellow-200');
+                    };
+                    
                     dropZone.ondrop = (e) => handleDrop(e, i);
                     
                     sentenceDisplay.appendChild(dropZone);
                 }
             });
             
+            // Combine correct words and distractors
             const allWords = [...currentQuestion.correctWords, ...currentQuestion.distractors];
-            const shuffled = allWords.sort(() => Math.random() - 0.5);
+            const shuffled = [...allWords].sort(() => Math.random() - 0.5);
             
             const wordBank = document.getElementById('wordBank');
             wordBank.innerHTML = '';
             
             shuffled.forEach(word => {
                 const wordDiv = document.createElement('div');
-                wordDiv.className = 'px-6 py-4 bg-white rounded-2xl shadow-lg cursor-move hover:shadow-xl transition-all hover:scale-110 border-4 border-blue-300';
+                wordDiv.className = 'word-bubble px-6 py-4 bg-gradient-to-r from-white to-blue-50 rounded-2xl shadow-lg cursor-move hover:shadow-xl transition-all border-4 border-blue-300';
                 wordDiv.draggable = true;
                 wordDiv.innerHTML = `<span class="text-xl font-bold text-gray-700">${word}</span>`;
                 wordDiv.dataset.word = word;
@@ -433,16 +851,25 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
                 
                 wordBank.appendChild(wordDiv);
             });
+            
+            // Speak the sentence
+            setTimeout(() => {
+                speakText(`Попълни изречението: ${currentQuestionText}`);
+            }, 300);
         }
 
         function handleDrop(e, slotIndex) {
             e.preventDefault();
             const word = e.dataTransfer.getData('word');
             const dropZone = e.currentTarget;
+            dropZone.classList.remove('bg-yellow-200');
             
-            if (currentQuestion.correctWords[slotIndex] === word) {
+            // Check if correct
+            const isCorrect = currentQuestion.correctWords[slotIndex] === word;
+            
+            if (isCorrect) {
                 draggedItems[slotIndex] = word;
-                dropZone.className = 'inline-flex items-center justify-center min-w-32 h-16 border-4 border-dashed rounded-xl transition-all bg-green-200 border-green-500';
+                dropZone.className = 'inline-flex items-center justify-center min-w-32 h-16 border-4 rounded-2xl transition-all bg-gradient-to-r from-green-200 to-emerald-200 border-green-500 scale-105';
                 dropZone.innerHTML = `<span class="text-xl font-bold text-green-700">${word}</span>`;
                 
                 // Remove from word bank
@@ -450,22 +877,28 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
                 const wordDivs = wordBank.querySelectorAll('[data-word]');
                 wordDivs.forEach(div => {
                     if (div.dataset.word === word) {
-                        div.remove();
+                        div.style.opacity = '0.3';
+                        div.style.pointerEvents = 'none';
                     }
                 });
                 
-                // Check if complete
-                if (Object.keys(draggedItems).length === currentQuestion.correctWords.length) {
-                    handleCorrectAnswer();
+                // Check if all blanks are filled
+                const allFilled = Object.keys(draggedItems).length === currentQuestion.correctWords.length;
+                
+                if (allFilled) {
+                    // All correct!
+                    setTimeout(() => {
+                        handleCorrectAnswer();
+                    }, 500);
                 }
             } else {
-                dropZone.classList.add('shake');
-                dropZone.className = 'inline-flex items-center justify-center min-w-32 h-16 border-4 border-dashed rounded-xl transition-all bg-red-200 border-red-500 shake';
-                dropZone.innerHTML = '<svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>';
+                // Wrong answer
+                dropZone.classList.add('shake', 'wrong-answer');
+                dropZone.innerHTML = `<span class="text-xl font-bold">${word}</span> <i class="fas fa-times ml-2"></i>`;
                 
                 setTimeout(() => {
-                    dropZone.className = 'inline-flex items-center justify-center min-w-32 h-16 border-4 border-dashed rounded-xl transition-all bg-yellow-100 border-yellow-400 hover:border-yellow-500 hover:scale-105';
-                    dropZone.innerHTML = '<span class="text-yellow-600">___</span>';
+                    dropZone.className = 'inline-flex items-center justify-center min-w-32 h-16 border-4 border-dashed rounded-2xl transition-all bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-400 hover:border-yellow-500 hover:scale-105 cursor-pointer';
+                    dropZone.innerHTML = '<span class="text-yellow-600 text-xl">______</span>';
                 }, 1000);
                 
                 handleWrongAnswer();
@@ -480,19 +913,27 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
                 document.getElementById('explanationMode').classList.remove('hidden');
                 document.getElementById('practiceMode').classList.add('hidden');
                 
-                document.getElementById('explanationTitle').textContent = `Нека научим за ${currentPartOfSpeech}!`;
+                const partData = partsOfSpeechData.find(p => p.name === currentPartOfSpeech);
+                const colorClass = partData ? partData.color : 'from-orange-400 to-red-500';
+                
+                document.getElementById('explanationTitle').textContent = `Нека научим за "${currentPartOfSpeech}"!`;
                 document.getElementById('explanationText').textContent = currentQuestion.explanation;
                 currentExplanationText = currentQuestion.explanation;
                 
                 const examplesList = document.getElementById('examplesList');
                 examplesList.innerHTML = currentQuestion.examples?.map(ex => 
-                    `<div class="text-lg text-gray-600 mb-2 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                        </svg>
-                        ${ex}
+                    `<div class="text-lg text-gray-600 mb-3 flex items-center gap-2 p-3 bg-white rounded-xl border border-orange-200">
+                        <div class="w-8 h-8 bg-gradient-to-r ${colorClass} rounded-full flex items-center justify-center">
+                            <i class="fas fa-star text-white text-sm"></i>
+                        </div>
+                        <span class="font-bold">${ex}</span>
                     </div>`
                 ).join('');
+                
+                // Speak explanation
+                setTimeout(() => {
+                    speakText(`Нека научим за ${currentPartOfSpeech}. ${currentExplanationText}`);
+                }, 300);
             } else {
                 document.getElementById('explanationMode').classList.add('hidden');
                 document.getElementById('practiceMode').classList.remove('hidden');
@@ -505,28 +946,40 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
                 
                 currentQuestion.words?.forEach((word, i) => {
                     const btn = document.createElement('button');
-                    btn.className = 'px-6 py-4 rounded-2xl shadow-lg transition-all hover:scale-110 border-4 bg-white border-pink-300 hover:border-pink-500 cursor-pointer';
+                    btn.className = 'word-bubble px-6 py-5 rounded-2xl shadow-lg transition-all hover:scale-110 border-4 bg-gradient-to-r from-white to-pink-50 border-pink-300 hover:border-pink-500 cursor-pointer';
                     btn.textContent = word;
                     btn.onclick = () => handleWordClick(word, i, btn);
                     wordsToClick.appendChild(btn);
                 });
+                
+                // Speak instruction
+                setTimeout(() => {
+                    speakCurrentPartQuestion();
+                }, 300);
             }
         }
 
         function handleWordClick(word, index, btn) {
-            if (currentQuestion.correctIndex === index) {
-                btn.className = 'px-6 py-4 rounded-2xl shadow-lg transition-all border-4 bg-green-300 border-green-600 scale-125';
-                btn.innerHTML = `${word} <svg class="inline ml-2 w-6 h-6 text-green-700" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>`;
+            const isCorrect = currentQuestion.correctIndex === index;
+            
+            if (isCorrect) {
+                btn.classList.remove('word-bubble');
+                btn.className = 'px-6 py-5 rounded-2xl shadow-lg transition-all border-4 bg-gradient-to-r from-green-300 to-emerald-400 border-green-600 scale-125 cursor-default';
+                btn.innerHTML = `${word} <i class="fas fa-check ml-3"></i>`;
+                
+                speakText("Браво! Точно така!");
                 
                 setTimeout(() => {
                     handleCorrectAnswer();
                 }, 1500);
             } else {
-                btn.className = 'px-6 py-4 rounded-2xl shadow-lg transition-all border-4 bg-red-300 border-red-600 shake';
-                btn.innerHTML = `${word} <svg class="inline ml-2 w-6 h-6 text-red-700" fill="currentColor" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>`;
+                btn.classList.add('shake', 'wrong-answer');
+                btn.innerHTML = `${word} <i class="fas fa-times ml-3"></i>`;
+                
+                speakText("Опитай пак!");
                 
                 setTimeout(() => {
-                    btn.className = 'px-6 py-4 rounded-2xl shadow-lg transition-all hover:scale-110 border-4 bg-white border-pink-300 hover:border-pink-500 cursor-pointer';
+                    btn.className = 'word-bubble px-6 py-5 rounded-2xl shadow-lg transition-all hover:scale-110 border-4 bg-gradient-to-r from-white to-pink-50 border-pink-300 hover:border-pink-500 cursor-pointer';
                     btn.innerHTML = word;
                 }, 1000);
                 
@@ -543,6 +996,18 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
         function handleCorrectAnswer() {
             correctAnswers++;
             score += 10;
+            currentStreak++;
+            
+            if (currentStreak > maxStreak) {
+                maxStreak = currentStreak;
+            }
+            
+            // Adjust difficulty
+            if (currentStreak >= 3 && difficulty < 3) {
+                difficulty++;
+                speakText("Супер! Сега ще са малко по-трудни!");
+            }
+            
             showCelebration();
             
             if (isTestMode) {
@@ -552,18 +1017,31 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
                 
                 if (testQuestions >= 5) {
                     if (testScore >= 4) {
-                        if (currentSubject === 'partsOfSpeech' && currentPartOfSpeech) {
+                        if (currentSubject === 'partsOfSpeech' && currentPartOfSpeech && !partsOfSpeechLearned.includes(currentPartOfSpeech)) {
                             partsOfSpeechLearned.push(currentPartOfSpeech);
+                            speakText(`Чудесно! Сега познаваш ${currentPartOfSpeech.toLowerCase()}!`);
                             currentPartOfSpeech = null;
                         }
-                        alert('🎉 Браво! Издържа теста! Готов си за следващото ниво!');
+                        
+                        // Passed the test
+                        setTimeout(() => {
+                            alert('🎉 Браво! Издържа теста! Готов си за следващото ниво!');
+                            isTestMode = false;
+                            testScore = 0;
+                            testQuestions = 0;
+                            document.getElementById('testModeIndicator').classList.add('hidden');
+                            document.getElementById('testButton').classList.add('hidden');
+                        }, 500);
                     } else {
-                        alert('Опитай пак! Трябва ти малко повече практика.');
+                        // Failed the test
+                        setTimeout(() => {
+                            alert('Опитай пак! Трябва ти малко повече практика.');
+                            isTestMode = false;
+                            testScore = 0;
+                            testQuestions = 0;
+                            document.getElementById('testModeIndicator').classList.add('hidden');
+                        }, 500);
                     }
-                    isTestMode = false;
-                    testScore = 0;
-                    testQuestions = 0;
-                    document.getElementById('testModeIndicator').classList.add('hidden');
                 }
             }
             
@@ -571,15 +1049,20 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
             
             setTimeout(() => {
                 generateQuestion();
-            }, 1500);
+            }, 2000);
         }
 
         function handleWrongAnswer() {
             wrongAnswers++;
+            currentStreak = 0;
             
+            // Adjust difficulty
             if (wrongAnswers > 0 && wrongAnswers % 3 === 0 && difficulty > 1) {
                 difficulty--;
+                speakText("Не се отказвай! Сега ще са по-лесни.");
             }
+            
+            updateUI();
         }
 
         function startTest() {
@@ -588,11 +1071,80 @@ Make it about everyday topics kids understand. Ensure distractors are obviously 
             testQuestions = 0;
             document.getElementById('testModeIndicator').classList.remove('hidden');
             document.getElementById('testProgress').textContent = '0/0';
+            document.getElementById('testButton').classList.add('hidden');
+            speakText("Започва тест! Имаш пет въпроса. Трябва да отговориш правилно на четири от тях.");
             generateQuestion();
         }
 
-        // Initialize
-        generateQuestion();
+        // Save/Load progress
+        function saveProgress() {
+            const progress = {
+                score,
+                correctAnswers,
+                wrongAnswers,
+                difficulty,
+                partsOfSpeechLearned,
+                currentPartOfSpeech,
+                level,
+                totalQuestions,
+                maxStreak,
+                startTime
+            };
+            localStorage.setItem('gramatikaBGProgress', JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('gramatikaBGProgress');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                score = progress.score || 0;
+                correctAnswers = progress.correctAnswers || 0;
+                wrongAnswers = progress.wrongAnswers || 0;
+                difficulty = progress.difficulty || 1;
+                partsOfSpeechLearned = progress.partsOfSpeechLearned || [];
+                currentPartOfSpeech = progress.currentPartOfSpeech || null;
+                level = progress.level || 1;
+                totalQuestions = progress.totalQuestions || 0;
+                maxStreak = progress.maxStreak || 0;
+                startTime = progress.startTime || Date.now();
+            }
+        }
+
+        function resetProgress() {
+            if (confirm("Сигурен ли си, че искаш да започнеш нова игра? Ще загубиш всички точки и напредък.")) {
+                score = 0;
+                correctAnswers = 0;
+                wrongAnswers = 0;
+                difficulty = 1;
+                partsOfSpeechLearned = [];
+                currentPartOfSpeech = null;
+                level = 1;
+                totalQuestions = 0;
+                currentStreak = 0;
+                maxStreak = 0;
+                startTime = Date.now();
+                isTestMode = false;
+                testScore = 0;
+                testQuestions = 0;
+                
+                localStorage.removeItem('gramatikaBGProgress');
+                updateUI();
+                updateStats();
+                generateQuestion();
+                speakText("Започваме нова игра! Успех!");
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('DOMContentLoaded', initGame);
+        
+        // Initialize speech synthesis voices
+        if ('speechSynthesis' in window) {
+            // Chrome loads voices asynchronously
+            window.speechSynthesis.onvoiceschanged = function() {
+                // Voices are now loaded
+            };
+        }
     </script>
 </body>
 </html>
