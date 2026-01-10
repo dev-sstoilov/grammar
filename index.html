@@ -45,13 +45,14 @@
             pointer-events: none;
         }
 
+        /* Buttons — NO animations */
         .level-button {
             position: absolute;
             width: 140px;
             height: 140px;
-            background: url('./rock.png') no-repeat center/contain;
+            background: url('./rock.png') no-repeat center / contain;
             border: none;
-            color: rgb(89,43,23);
+            color: rgb(89, 43, 23);
             font-family: 'Fredoka', system-ui, sans-serif;
             font-size: 56px;
             display: flex;
@@ -62,43 +63,20 @@
             cursor: pointer;
             pointer-events: auto;
             user-select: none;
-            transition: transform 0.25s ease;
         }
 
-            .level-button:hover {
-                transform: translate(-50%, -50%) scale(1.12);
-            }
-
-            .level-button.click-animation {
-                animation: clickEffect 0.6s ease;
-            }
-
-        @keyframes clickEffect {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(0.85);
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-
-        /* Frog GIF styling (looping) */
+        /* Frog GIF */
         #frog {
             position: absolute;
-            width: 192px; /* 2x size */
+            width: 192px;
             left: 748px;
             top: 898px;
-            pointer-events: none; /* not draggable */
+            pointer-events: none;
             user-select: none;
             z-index: 30;
         }
 
-        @media (max-width:768px) {
+        @media (max-width: 768px) {
             .level-button {
                 width: 60px;
                 height: 60px;
@@ -116,20 +94,15 @@
     <div id="mapWrapper">
         <img id="mapImage" src="./Untitled.png" alt="Map">
         <div class="button-container" id="buttonContainer"></div>
-
-        <!-- Normal looping GIF -->
         <img id="frog" src="./frog.gif" alt="Frog">
     </div>
 
     <script>
-        /* =====================================================
-        BUTTONS
-        ===================================================== */
         const BUTTON_POSITIONS = [
-        { x:0.0563, y:0.1162 }, { x:0.1680, y:0.2488 }, { x:0.1742, y:0.4780 },
-        { x:0.2199, y:0.7237 }, { x:0.3496, y:0.6750 }, { x:0.4043, y:0.4639 },
-        { x:0.5016, y:0.2998 }, { x:0.6082, y:0.4843 }, { x:0.6859, y:0.6601 },
-        { x:0.7902, y:0.4945 }, { x:0.8949, y:0.4741 }, { x:0.9406, y:0.7590 }
+            { x: 0.0563, y: 0.1162 }, { x: 0.1680, y: 0.2488 }, { x: 0.1742, y: 0.4780 },
+            { x: 0.2199, y: 0.7237 }, { x: 0.3496, y: 0.6750 }, { x: 0.4043, y: 0.4639 },
+            { x: 0.5016, y: 0.2998 }, { x: 0.6082, y: 0.4843 }, { x: 0.6859, y: 0.6601 },
+            { x: 0.7902, y: 0.4945 }, { x: 0.8949, y: 0.4741 }, { x: 0.9406, y: 0.7590 }
         ];
 
         const wrapper = document.getElementById('mapWrapper');
@@ -138,36 +111,36 @@
         let currentLevel = 1;
 
         function placeButtons() {
-        const w = wrapper.clientWidth;
-        const h = wrapper.clientHeight;
-        buttons.forEach((btn,i)=>{
-        const p=BUTTON_POSITIONS[i];
-        btn.style.left=`${p.x*w}px`;
-        btn.style.top=`${p.y*h}px`;
-        });
+            const w = wrapper.clientWidth;
+            const h = wrapper.clientHeight;
+            buttons.forEach((btn, i) => {
+                const p = BUTTON_POSITIONS[i];
+                btn.style.left = `${p.x * w}px`;
+                btn.style.top = `${p.y * h}px`;
+            });
         }
 
         function createButtons() {
-        container.innerHTML='';
-        buttons.length=0;
-        BUTTON_POSITIONS.forEach((_,i)=>{
-        const btn=document.createElement('div');
-        btn.className='level-button';
-        btn.textContent=i+1;
-        btn.dataset.level=i+1;
+            container.innerHTML = '';
+            buttons.length = 0;
 
-        btn.addEventListener('click', function(){
-        if(+this.dataset.level===currentLevel){
-        this.classList.add('click-animation');
-        setTimeout(()=>this.classList.remove('click-animation'),600);
-        currentLevel++;
-        }
-        });
+            BUTTON_POSITIONS.forEach((_, i) => {
+                const btn = document.createElement('div');
+                btn.className = 'level-button';
+                btn.textContent = i + 1;
+                btn.dataset.level = i + 1;
 
-        container.appendChild(btn);
-        buttons.push(btn);
-        });
-        placeButtons();
+                btn.addEventListener('click', function () {
+                    if (+this.dataset.level === currentLevel) {
+                        currentLevel++;
+                    }
+                });
+
+                container.appendChild(btn);
+                buttons.push(btn);
+            });
+
+            placeButtons();
         }
 
         window.addEventListener('resize', placeButtons);
