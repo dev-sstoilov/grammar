@@ -45,7 +45,6 @@
             pointer-events: none;
         }
 
-        /* Buttons — NO animations */
         .level-button {
             position: absolute;
             width: 140px;
@@ -65,7 +64,6 @@
             user-select: none;
         }
 
-        /* Frog GIF */
         #frog {
             position: absolute;
             width: 192px;
@@ -74,6 +72,54 @@
             pointer-events: none;
             user-select: none;
             z-index: 30;
+        }
+
+        /* ================= FISH ================= */
+
+        .fish {
+            position: absolute;
+            width: 42px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 25;
+            transform-origin: 50% 50%;
+        }
+
+        @keyframes fishJump {
+            0% {
+                transform: translate(-50%, 28px) rotate(-45deg);
+                opacity: 0;
+            }
+
+            10% {
+                transform: translate(6px, -6px) rotate(-45deg);
+                opacity: 1;
+            }
+
+            32% {
+                transform: translate(22px, -36px) rotate(-22deg);
+                opacity: 1;
+            }
+
+            48% {
+                transform: translate(34px, -40px) rotate(0deg);
+                opacity: 1;
+            }
+
+            64% {
+                transform: translate(46px, -14px) rotate(22deg);
+                opacity: 1;
+            }
+
+            80% {
+                transform: translate(56px, 16px) rotate(48deg);
+                opacity: 0.45;
+            }
+
+            100% {
+                transform: translate(62px, 38px) rotate(62deg);
+                opacity: 0;
+            }
         }
 
         @media (max-width: 768px) {
@@ -85,6 +131,10 @@
 
             #frog {
                 width: 120px;
+            }
+
+            .fish {
+                width: 28px;
             }
         }
     </style>
@@ -99,10 +149,10 @@
 
     <script>
         const BUTTON_POSITIONS = [
-            { x: 0.0563, y: 0.1162 }, { x: 0.1680, y: 0.2488 }, { x: 0.1742, y: 0.4780 },
-            { x: 0.2199, y: 0.7237 }, { x: 0.3496, y: 0.6750 }, { x: 0.4043, y: 0.4639 },
-            { x: 0.5016, y: 0.2998 }, { x: 0.6082, y: 0.4843 }, { x: 0.6859, y: 0.6601 },
-            { x: 0.7902, y: 0.4945 }, { x: 0.8949, y: 0.4741 }, { x: 0.9406, y: 0.7590 }
+        { x: 0.0563, y: 0.1162 }, { x: 0.1680, y: 0.2488 }, { x: 0.1742, y: 0.4780 },
+        { x: 0.2199, y: 0.7237 }, { x: 0.3496, y: 0.6750 }, { x: 0.4043, y: 0.4639 },
+        { x: 0.5016, y: 0.2998 }, { x: 0.6082, y: 0.4843 }, { x: 0.6859, y: 0.6601 },
+        { x: 0.7902, y: 0.4945 }, { x: 0.8949, y: 0.4741 }, { x: 0.9406, y: 0.7590 }
         ];
 
         const wrapper = document.getElementById('mapWrapper');
@@ -110,41 +160,86 @@
         const buttons = [];
         let currentLevel = 1;
 
+        let lastIndex = -1;
+        let directionToggle = 1;
+
         function placeButtons() {
-            const w = wrapper.clientWidth;
-            const h = wrapper.clientHeight;
-            buttons.forEach((btn, i) => {
-                const p = BUTTON_POSITIONS[i];
-                btn.style.left = `${p.x * w}px`;
-                btn.style.top = `${p.y * h}px`;
-            });
+        const w = wrapper.clientWidth;
+        const h = wrapper.clientHeight;
+        buttons.forEach((btn, i) => {
+        const p = BUTTON_POSITIONS[i];
+        btn.style.left = `${p.x * w}px`;
+        btn.style.top = `${p.y * h}px`;
+        });
         }
 
         function createButtons() {
-            container.innerHTML = '';
-            buttons.length = 0;
+        container.innerHTML = '';
+        buttons.length = 0;
 
-            BUTTON_POSITIONS.forEach((_, i) => {
-                const btn = document.createElement('div');
-                btn.className = 'level-button';
-                btn.textContent = i + 1;
-                btn.dataset.level = i + 1;
+        BUTTON_POSITIONS.forEach((_, i) => {
+        const btn = document.createElement('div');
+        btn.className = 'level-button';
+        btn.textContent = i + 1;
+        btn.dataset.level = i + 1;
 
-                btn.addEventListener('click', function () {
-                    if (+this.dataset.level === currentLevel) {
-                        currentLevel++;
-                    }
-                });
+        btn.addEventListener('click', function () {
+        if (+this.dataset.level === currentLevel) {
+        currentLevel++;
+        }
+        });
 
-                container.appendChild(btn);
-                buttons.push(btn);
-            });
+        container.appendChild(btn);
+        buttons.push(btn);
+        });
 
-            placeButtons();
+        placeButtons();
+        }
+
+        function spawnFishAt(index) {
+        const w = wrapper.clientWidth;
+        const h = wrapper.clientHeight;
+        const p = BUTTON_POSITIONS[index];
+
+        const fish = document.createElement('img');
+        fish.src = './fish.png';
+        fish.className = 'fish';
+
+        const scale = 1 + Math.random() * 0.5;
+        const dir = directionToggle *= -1;
+
+        fish.style.transform = `scaleX(${dir}) scale(${scale})`;
+        fish.style.left = `${p.x * w - 40 * dir}px`;
+        fish.style.top = `${p.y * h + 40}px`;
+
+        wrapper.appendChild(fish);
+
+        fish.offsetHeight;
+        fish.style.animation = 'fishJump 0.9s cubic-bezier(0.22, 0.61, 0.36, 1)';
+
+        setTimeout(() => fish.remove(), 1000);
+        }
+
+        function fishJump() {
+        let indices = [...BUTTON_POSITIONS.keys()]
+        .filter(i => i !== lastIndex)
+        .sort(() => Math.random() - 0.5);
+
+        const doubleJump = Math.random() < 0.1;
+
+        spawnFishAt(indices[0]);
+        lastIndex = indices[0];
+
+        if (doubleJump) {
+        spawnFishAt(indices[1]);
+        }
         }
 
         window.addEventListener('resize', placeButtons);
-        window.addEventListener('load', createButtons);
+        window.addEventListener('load', () => {
+        createButtons();
+        setInterval(fishJump, 2000);
+        });
     </script>
 </body>
 </html>
