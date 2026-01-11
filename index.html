@@ -219,7 +219,7 @@
 
         setTimeout(() => fish.remove(), 1000);
         }
-    
+        
         const BLOCKED_FISH_INDICES = new Set([1, 2, 4, 7, 9]);
     
         function fishJump() {
@@ -241,22 +241,6 @@
                 spawnFishAt(indices[1]);
             }
         }
-
-        const doubleJump = Math.random() < 0.1;
-
-        spawnFishAt(indices[0]);
-        lastIndex = indices[0];
-
-        if (doubleJump) {
-        spawnFishAt(indices[1]);
-        }
-        }
-
-        window.addEventListener('resize', placeButtons);
-        window.addEventListener('load', () => {
-        createButtons();
-        setInterval(fishJump, 2000);
-        });
     </script>
 </body>
 </html>
