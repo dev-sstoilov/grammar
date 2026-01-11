@@ -219,11 +219,28 @@
 
         setTimeout(() => fish.remove(), 1000);
         }
-
+    
+        const BLOCKED_FISH_INDICES = new Set([1, 2, 4, 7, 9]);
+    
         function fishJump() {
-        let indices = [...BUTTON_POSITIONS.keys()]
-        .filter(i => i !== lastIndex)
-        .sort(() => Math.random() - 0.5);
+            let indices = [...BUTTON_POSITIONS.keys()]
+                .filter(i =>
+                    i !== lastIndex &&
+                    !BLOCKED_FISH_INDICES.has(i)
+                )
+                .sort(() => Math.random() - 0.5);
+    
+            if (indices.length === 0) return;
+    
+            const doubleJump = Math.random() < 0.1;
+    
+            spawnFishAt(indices[0]);
+            lastIndex = indices[0];
+    
+            if (doubleJump && indices.length > 1) {
+                spawnFishAt(indices[1]);
+            }
+        }
 
         const doubleJump = Math.random() < 0.1;
 
