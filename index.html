@@ -216,7 +216,7 @@
 
         function fishJump() {
             // Exclude forbidden buttons: 2,3,5,8,10 (0-based index)
-            const forbidden = [1, 2, 4, 7, 9, 6];
+            const forbidden = [1, 2, 4, 7, 9];
             let indices = [...BUTTON_POSITIONS.keys()]
                 .filter(i => i !== lastIndex && !forbidden.includes(i))
                 .sort(() => Math.random() - 0.5);
