@@ -155,7 +155,6 @@
         let currentLevel = 1;
 
         let lastIndex = -1;
-        let directionToggle = 1;
 
         function placeButtons() {
             const w = wrapper.clientWidth;
@@ -189,29 +188,34 @@
 
             placeButtons();
         }
-
+        
         function spawnFishAt(index) {
             const w = wrapper.clientWidth;
             const h = wrapper.clientHeight;
             const p = BUTTON_POSITIONS[index];
-
+        
             const fish = document.createElement('img');
             fish.src = './fish.png';
             fish.className = 'fish';
-
-            const dir = directionToggle *= -1;
-
-            fish.style.transform = `scaleX(${dir})`;
-            fish.style.left = `${p.x * w - 40 * dir}px`;
-            fish.style.top = `${p.y * h + 40}px`;
-
+        
+            /* fixed, consistent jump start offset */
+            const START_OFFSET_X = -40;
+            const START_OFFSET_Y = 40;
+        
+            fish.style.left = `${p.x * w + START_OFFSET_X}px`;
+            fish.style.top = `${p.y * h + START_OFFSET_Y}px`;
+        
             wrapper.appendChild(fish);
-
+        
+            /* force reflow */
             fish.offsetHeight;
+        
+            /* consistent speed & acceleration */
             fish.style.animation = 'fishJump 1.8s linear';
-
+        
             setTimeout(() => fish.remove(), 1900);
         }
+
 
         function fishJump() {
             const forbidden = [1, 2, 4, 7, 9];
