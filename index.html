@@ -78,7 +78,7 @@
 
         .fish {
             position: absolute;
-            width: 42px;
+            width: 54px; /* increased size */
             pointer-events: none;
             opacity: 0;
             z-index: 25;
@@ -128,7 +128,7 @@
             }
 
             .fish {
-                width: 28px;
+                width: 36px; /* scaled up consistently */
             }
         }
     </style>
@@ -199,23 +199,21 @@
             fish.src = './fish.png';
             fish.className = 'fish';
 
-            const scale = 1 + Math.random() * 0.5;
             const dir = directionToggle *= -1;
 
-            fish.style.transform = `scaleX(${dir}) scale(${scale})`;
+            fish.style.transform = `scaleX(${dir})`;
             fish.style.left = `${p.x * w - 40 * dir}px`;
             fish.style.top = `${p.y * h + 40}px`;
 
             wrapper.appendChild(fish);
 
             fish.offsetHeight;
-            fish.style.animation = 'fishJump 0.9s cubic-bezier(0.22, 0.61, 0.36, 1)';
+            fish.style.animation = 'fishJump 1.8s linear';
 
-            setTimeout(() => fish.remove(), 1000);
+            setTimeout(() => fish.remove(), 1900);
         }
 
         function fishJump() {
-            // Exclude forbidden buttons: 2,3,5,8,10 (0-based index)
             const forbidden = [1, 2, 4, 7, 9];
             let indices = [...BUTTON_POSITIONS.keys()]
                 .filter(i => i !== lastIndex && !forbidden.includes(i))
