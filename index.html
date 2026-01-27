@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Grammar Garden - Interactive Learning</title>
+    <title>Граматика за Деца</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
@@ -47,7 +47,8 @@
             max-width: 1200px;
             height: 80vh;
             max-height: 800px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
             border-radius: 40px;
             border: 8px solid #FFD700; /* Yellow primary outline */
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), inset 0 0 0 4px #FFFFFF;
@@ -111,31 +112,31 @@
             opacity: 1;
         }
 
-        /* Remove enlarge on hover */
-        .level-button:hover {
-            /* No scale */
-            transform: translate(-50%, -50%);
-        }
+            /* Remove enlarge on hover */
+            .level-button:hover {
+                /* No scale */
+                transform: translate(-50%, -50%);
+            }
 
-        /* Future lesson buttons (locked): gray and unclickable */
-        .level-button.locked {
-            cursor: not-allowed;
-            pointer-events: none;
-            opacity: 0.7;
-            filter: grayscale(0.5);
-        }
+            /* Future lesson buttons (locked): gray and unclickable */
+            .level-button.locked {
+                cursor: not-allowed;
+                pointer-events: auto; /* Change from 'none' to 'auto' */
+                opacity: 0.7;
+                filter: grayscale(0.5);
+            }
 
-        .level-button.locked:hover {
-            transform: translate(-50%, -50%);
-        }
+                .level-button.locked:hover {
+                    transform: translate(-50%, -50%);
+                }
 
-        /* Previous lesson buttons: normal color, unclickable */
-        .level-button.previous {
-            cursor: not-allowed;
-            pointer-events: none;
-            filter: none;
-            opacity: 1;
-        }
+            /* Previous lesson buttons: normal color, unclickable */
+            .level-button.previous {
+                cursor: not-allowed;
+                pointer-events: auto; /* Change from 'none' to 'auto' */
+                filter: none;
+                opacity: 1;
+            }
 
         #frog {
             position: absolute;
@@ -238,10 +239,10 @@
             filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
         }
 
-        /* Remove enlarge on hover for nav buttons */
-        .nav-button:hover {
-            /* No scale */
-        }
+            /* Remove enlarge on hover for nav buttons */
+            .nav-button:hover {
+                /* No scale */
+            }
 
         #backButton {
             background-image: url('https://github.com/dev-sstoilov/grammar/blob/main/backward_btn.png?raw=true');
@@ -348,23 +349,23 @@
             border: 3px solid white;
         }
 
-        .draggable-word:hover {
-            /* No translateY or scale */
-            box-shadow: 0 8px 20px rgba(30, 136, 229, 0.4);
-        }
+            .draggable-word:hover {
+                /* No translateY or scale */
+                box-shadow: 0 8px 20px rgba(30, 136, 229, 0.4);
+            }
 
-        .draggable-word.dragging {
-            opacity: 0.7;
-        }
+            .draggable-word.dragging {
+                opacity: 0.7;
+            }
 
-        .draggable-word.disabled {
-            background: #bbb !important;
-            color: #888 !important;
-            border: 3px solid #ccc !important;
-            cursor: not-allowed !important;
-            pointer-events: none !important;
-            opacity: 0.6 !important;
-        }
+            .draggable-word.disabled {
+                background: #bbb !important;
+                color: #888 !important;
+                border: 3px solid #ccc !important;
+                cursor: not-allowed !important;
+                pointer-events: none !important;
+                opacity: 0.6 !important;
+            }
 
         /* Click to Answer Styling */
         .click-question {
@@ -401,9 +402,9 @@
             position: relative;
         }
 
-        .clickable-word:hover {
-            background: rgba(233, 30, 99, 0.2);
-        }
+            .clickable-word:hover {
+                background: rgba(233, 30, 99, 0.2);
+            }
 
             .clickable-word.clicked {
                 background: rgba(30, 136, 229, 0.2);
@@ -450,6 +451,7 @@
             0% {
                 opacity: 0;
             }
+
             100% {
                 opacity: 1;
             }
@@ -581,32 +583,32 @@
         const CACHE_KEY = 'grammar_garden_progress';
 
         function saveProgress() {
-            const data = {
-                currentLevel,
-                currentLessonIndex,
-                completedLessons: Array.from(completedLessons),
-                mistakesCount
-            };
-            localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        const data = {
+        currentLevel,
+        currentLessonIndex,
+        completedLessons: Array.from(completedLessons),
+        mistakesCount
+        };
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         }
 
         function loadProgress() {
-            const data = localStorage.getItem(CACHE_KEY);
-            if (data) {
-                try {
-                    const parsed = JSON.parse(data);
-                    if (typeof parsed.currentLevel === 'number') currentLevel = parsed.currentLevel;
-                    if (typeof parsed.currentLessonIndex === 'number') currentLessonIndex = parsed.currentLessonIndex;
-                    if (Array.isArray(parsed.completedLessons)) completedLessons = new Set(parsed.completedLessons);
-                    if (typeof parsed.mistakesCount === 'number') mistakesCount = parsed.mistakesCount;
-                } catch (e) {
-                    // Ignore parse errors
-                }
-            }
+        const data = localStorage.getItem(CACHE_KEY);
+        if (data) {
+        try {
+        const parsed = JSON.parse(data);
+        if (typeof parsed.currentLevel === 'number') currentLevel = parsed.currentLevel;
+        if (typeof parsed.currentLessonIndex === 'number') currentLessonIndex = parsed.currentLessonIndex;
+        if (Array.isArray(parsed.completedLessons)) completedLessons = new Set(parsed.completedLessons);
+        if (typeof parsed.mistakesCount === 'number') mistakesCount = parsed.mistakesCount;
+        } catch (e) {
+        // Ignore parse errors
+        }
+        }
         }
 
         function clearProgress() {
-            localStorage.removeItem(CACHE_KEY);
+        localStorage.removeItem(CACHE_KEY);
         }
 
         // Bulgarian lesson data for levels 1-10
@@ -820,38 +822,38 @@
 
         // Create buttons for all 12 positions
         BUTTON_POSITIONS.forEach((pos, index) => {
-            const levelNum = index + 1;
-            const btn = document.createElement('button');
-            btn.className = 'level-button';
-            btn.textContent = levelNum;
-            btn.dataset.level = levelNum;
+        const levelNum = index + 1;
+        const btn = document.createElement('button');
+        btn.className = 'level-button';
+        btn.textContent = levelNum;
+        btn.dataset.level = levelNum;
 
-            // Position the button
-            const w = wrapper.clientWidth;
-            const h = wrapper.clientHeight;
-            btn.style.left = `${pos.x * w}px`;
-            btn.style.top = `${pos.y * h}px`;
+        // Position the button
+        const w = wrapper.clientWidth;
+        const h = wrapper.clientHeight;
+        btn.style.left = `${pos.x * w}px`;
+        btn.style.top = `${pos.y * h}px`;
 
-            if (levelNum < currentLevel) {
-                // Previous lessons: normal color, unclickable
-                btn.classList.add('previous');
-            } else if (levelNum === currentLevel) {
-                // Current level: clickable
-                btn.onclick = () => selectLevel(levelNum);
+        if (levelNum < currentLevel) {
+        // Previous lessons: normal color, unclickable
+        btn.classList.add('previous');
+        } else if (levelNum === currentLevel) {
+        // Current level: clickable
+        btn.onclick = () => selectLevel(levelNum);
 
-                // Add location indicator above this button
-                const indicator = document.createElement('img');
-                indicator.src = 'https://github.com/dev-sstoilov/grammar/blob/main/location.png?raw=true';
-                indicator.className = 'location-indicator';
-                indicator.style.left = btn.style.left;
-                indicator.style.top = btn.style.top;
-                wrapper.appendChild(indicator);
-            } else {
-                // Future lessons: gray and unclickable
-                btn.classList.add('locked');
-            }
+        // Add location indicator above this button
+        const indicator = document.createElement('img');
+        indicator.src = 'https://github.com/dev-sstoilov/grammar/blob/main/location.png?raw=true';
+        indicator.className = 'location-indicator';
+        indicator.style.left = btn.style.left;
+        indicator.style.top = btn.style.top;
+        wrapper.appendChild(indicator);
+        } else {
+        // Future lessons: gray and unclickable
+        btn.classList.add('locked');
+        }
 
-            container.appendChild(btn);
+        container.appendChild(btn);
         });
         }
 
@@ -899,39 +901,39 @@
         }
 
         function goHome() {
-            currentLessonIndex = 0;
-            saveProgress();
-            document.getElementById('mapContainer').classList.remove('hidden');
-            document.getElementById('mainContainer').classList.add('hidden');
-            document.getElementById('navButtons').classList.add('hidden');
-            initializeMap();
+        currentLessonIndex = 0;
+        saveProgress();
+        document.getElementById('mapContainer').classList.remove('hidden');
+        document.getElementById('mainContainer').classList.add('hidden');
+        document.getElementById('navButtons').classList.add('hidden');
+        initializeMap();
         }
 
         function selectLevel(level) {
-            currentLevel = level;
-            currentLessonIndex = 0;
-            mistakesCount = 0;
-            saveProgress();
+        currentLevel = level;
+        currentLessonIndex = 0;
+        mistakesCount = 0;
+        saveProgress();
 
-            // Hide map, show lesson container
-            document.getElementById('mapContainer').classList.add('hidden');
-            document.getElementById('mainContainer').classList.remove('hidden');
-            document.getElementById('navButtons').classList.remove('hidden');
+        // Hide map, show lesson container
+        document.getElementById('mapContainer').classList.add('hidden');
+        document.getElementById('mainContainer').classList.remove('hidden');
+        document.getElementById('navButtons').classList.remove('hidden');
 
-            loadLesson();
+        loadLesson();
         }
 
         function loadLesson() {
-            const levelLessons = lessonsData[currentLevel];
-            if (!levelLessons || currentLessonIndex >= levelLessons.length) {
-                completeLevel();
-                return;
-            }
+        const levelLessons = lessonsData[currentLevel];
+        if (!levelLessons || currentLessonIndex >= levelLessons.length) {
+        completeLevel();
+        return;
+        }
 
-            currentLessonData = levelLessons[currentLessonIndex];
-            renderLesson(currentLessonData);
-            updateProgressDots(currentLessonIndex);
-            saveProgress();
+        currentLessonData = levelLessons[currentLessonIndex];
+        renderLesson(currentLessonData);
+        updateProgressDots(currentLessonIndex);
+        saveProgress();
         }
 
         function renderLesson(lesson) {
@@ -1015,110 +1017,110 @@
         }
 
         function initializeDragAndDrop(correctAnswers) {
-            const draggables = document.querySelectorAll('.draggable-word');
-            const dropZones = document.querySelectorAll('.drop-zone');
-            let droppedWords = new Array(correctAnswers.length).fill(null);
-            let correctCount = 0;
+        const draggables = document.querySelectorAll('.draggable-word');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        let droppedWords = new Array(correctAnswers.length).fill(null);
+        let correctCount = 0;
 
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', e.target.dataset.word);
-                    e.target.classList.add('dragging');
-                });
+        draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', e.target.dataset.word);
+        e.target.classList.add('dragging');
+        });
 
-                draggable.addEventListener('dragend', (e) => {
-                    e.target.classList.remove('dragging');
-                });
-            });
+        draggable.addEventListener('dragend', (e) => {
+        e.target.classList.remove('dragging');
+        });
+        });
 
-            dropZones.forEach(zone => {
-                zone.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    zone.classList.add('active');
-                });
+        dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('active');
+        });
 
-                zone.addEventListener('dragleave', () => {
-                    zone.classList.remove('active');
-                });
+        zone.addEventListener('dragleave', () => {
+        zone.classList.remove('active');
+        });
 
-                zone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    zone.classList.remove('active');
+        zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('active');
 
-                    const word = e.dataTransfer.getData('text/plain');
-                    const index = parseInt(zone.dataset.index);
+        const word = e.dataTransfer.getData('text/plain');
+        const index = parseInt(zone.dataset.index);
 
-                    // Remove from previous position if already placed
-                    if (droppedWords.includes(word)) {
-                        const prevIndex = droppedWords.indexOf(word);
-                        if (prevIndex !== -1) {
-                            dropZones[prevIndex].innerHTML = '';
-                            droppedWords[prevIndex] = null;
-                        }
-                    }
+        // Remove from previous position if already placed
+        if (droppedWords.includes(word)) {
+        const prevIndex = droppedWords.indexOf(word);
+        if (prevIndex !== -1) {
+        dropZones[prevIndex].innerHTML = '';
+        droppedWords[prevIndex] = null;
+        }
+        }
 
-                    // Place in new position
-                    zone.innerHTML = `<span class="draggable-word">${word}</span>`;
-                    droppedWords[index] = word;
+        // Place in new position
+        zone.innerHTML = `<span class="draggable-word">${word}</span>`;
+        droppedWords[index] = word;
 
-                    // Check answers
-                    correctCount = 0;
-                    droppedWords.forEach((w, i) => {
-                        if (w === correctAnswers[i]) {
-                            dropZones[i].classList.add('correct');
-                            dropZones[i].classList.remove('incorrect');
-                            correctCount++;
-                        } else if (w !== null) {
-                            dropZones[i].classList.add('incorrect');
-                            dropZones[i].classList.remove('correct');
-                        }
-                    });
+        // Check answers
+        correctCount = 0;
+        droppedWords.forEach((w, i) => {
+        if (w === correctAnswers[i]) {
+        dropZones[i].classList.add('correct');
+        dropZones[i].classList.remove('incorrect');
+        correctCount++;
+        } else if (w !== null) {
+        dropZones[i].classList.add('incorrect');
+        dropZones[i].classList.remove('correct');
+        }
+        });
 
-                    // Gray out and disable word if not in correctAnswers
-                    if (!correctAnswers.includes(word)) {
-                        const wordBank = document.getElementById('wordBank');
-                        const wordElems = wordBank.querySelectorAll('.draggable-word');
-                        wordElems.forEach(wEl => {
-                            if (wEl.dataset.word === word) {
-                                wEl.classList.add('disabled');
-                                wEl.setAttribute('draggable', 'false');
-                            }
-                        });
-                    }
+        // Gray out and disable word if not in correctAnswers
+        if (!correctAnswers.includes(word)) {
+        const wordBank = document.getElementById('wordBank');
+        const wordElems = wordBank.querySelectorAll('.draggable-word');
+        wordElems.forEach(wEl => {
+        if (wEl.dataset.word === word) {
+        wEl.classList.add('disabled');
+        wEl.setAttribute('draggable', 'false');
+        }
+        });
+        }
 
-                    // Check if all correct
-                    if (correctCount === correctAnswers.length) {
-                        document.getElementById('feedbackMessage').textContent = 'Отлично! Всичко е вярно!';
-                        document.getElementById('feedbackMessage').classList.add('correct');
-                        document.getElementById('feedbackMessage').classList.remove('incorrect');
-                        correctSound.play();
+        // Check if all correct
+        if (correctCount === correctAnswers.length) {
+        document.getElementById('feedbackMessage').textContent = 'Отлично! Всичко е вярно!';
+        document.getElementById('feedbackMessage').classList.add('correct');
+        document.getElementById('feedbackMessage').classList.remove('incorrect');
+        correctSound.play();
 
-                        // Mark as completed
-                        completedLessons.add(currentLevel);
-                        setTimeout(() => {
-                            if (currentLessonIndex === lessonsData[currentLevel].length - 1) {
-                                currentLevel++;
-                            }
-                            nextLesson();
-                        }, 1500);
-                    } else if (droppedWords.every(w => w !== null)) {
-                        mistakesCount++;
-                        document.getElementById('feedbackMessage').textContent = 'Не съвсем вярно. Опитай отново!';
-                        document.getElementById('feedbackMessage').classList.add('incorrect');
-                        document.getElementById('feedbackMessage').classList.remove('correct');
-                        incorrectSound.play();
+        // Mark as completed
+        completedLessons.add(currentLevel);
+        setTimeout(() => {
+        if (currentLessonIndex === lessonsData[currentLevel].length - 1) {
+        currentLevel++;
+        }
+        nextLesson();
+        }, 1500);
+        } else if (droppedWords.every(w => w !== null)) {
+        mistakesCount++;
+        document.getElementById('feedbackMessage').textContent = 'Не съвсем вярно. Опитай отново!';
+        document.getElementById('feedbackMessage').classList.add('incorrect');
+        document.getElementById('feedbackMessage').classList.remove('correct');
+        incorrectSound.play();
 
-                        if (mistakesCount >= 3) {
-                            // Go back to previous lesson
-                            setTimeout(() => {
-                                mistakesCount = 0;
-                                currentLessonIndex = Math.max(0, currentLessonIndex - 1);
-                                loadLesson();
-                            }, 1000);
-                        }
-                    }
-                });
-            });
+        if (mistakesCount >= 3) {
+        // Go back to previous lesson
+        setTimeout(() => {
+        mistakesCount = 0;
+        currentLessonIndex = Math.max(0, currentLessonIndex - 1);
+        loadLesson();
+        }, 1000);
+        }
+        }
+        });
+        });
         }
 
         function initializeClickToAnswer(correctAnswer) {
@@ -1176,78 +1178,78 @@
         }
 
         function nextLesson() {
-            currentLessonIndex++;
-            mistakesCount = 0;
-            saveProgress();
-            loadLesson();
+        currentLessonIndex++;
+        mistakesCount = 0;
+        saveProgress();
+        loadLesson();
         }
 
         function previousLesson() {
-            currentLessonIndex = Math.max(0, currentLessonIndex - 1);
-            mistakesCount = 0;
-            saveProgress();
-            loadLesson();
+        currentLessonIndex = Math.max(0, currentLessonIndex - 1);
+        mistakesCount = 0;
+        saveProgress();
+        loadLesson();
         }
 
         function completeLevel() {
-            const contentArea = document.getElementById('contentArea');
-            contentArea.innerHTML = `
-            <h1 class="lesson-title">🎉 Ниво ${currentLevel} завършено! 🎉</h1>
-            <div style="font-size: 2rem; color: #4CAF50; margin: 30px 0;">
-            Страхотно се справяш!
-            </div>
-            <div style="font-size: 1.8rem; color: #666; max-width: 600px;">
-            Чудесна работа! Научи много нови неща!
-            </div>
-            <button class="start-button" style="margin-top: 40px; padding: 15px 40px; font-size: 1.8rem; background: #1E88E5;" onclick="goHome()">
-            Обратно към картата
-            </button>
-            `;
-            updateProgressDots(-1);
-            saveProgress();
+        const contentArea = document.getElementById('contentArea');
+        contentArea.innerHTML = `
+        <h1 class="lesson-title">🎉 Ниво ${currentLevel} завършено! 🎉</h1>
+        <div style="font-size: 2rem; color: #4CAF50; margin: 30px 0;">
+        Страхотно се справяш!
+        </div>
+        <div style="font-size: 1.8rem; color: #666; max-width: 600px;">
+        Чудесна работа! Научи много нови неща!
+        </div>
+        <button class="start-button" style="margin-top: 40px; padding: 15px 40px; font-size: 1.8rem; background: #1E88E5;" onclick="goHome()">
+        Обратно към картата
+        </button>
+        `;
+        updateProgressDots(-1);
+        saveProgress();
         }
 
         function updateProgressDots(currentIndex) {
-            const progressDots = document.getElementById('progressDots');
-            const levelLessons = lessonsData[currentLevel] || [];
+        const progressDots = document.getElementById('progressDots');
+        const levelLessons = lessonsData[currentLevel] || [];
 
-            progressDots.innerHTML = '';
+        progressDots.innerHTML = '';
 
-            // Support up to 20 questions per lesson
-            const maxDots = Math.min(levelLessons.length, 20);
-            for (let i = 0; i < maxDots; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'progress-dot';
+        // Support up to 20 questions per lesson
+        const maxDots = Math.min(levelLessons.length, 20);
+        for (let i = 0; i < maxDots; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot';
 
-                if (i < currentIndex) {
-                    dot.classList.add('completed');
-                } else if (i === currentIndex) {
-                    dot.classList.add('active');
-                }
+        if (i < currentIndex) {
+        dot.classList.add('completed');
+        } else if (i === currentIndex) {
+        dot.classList.add('active');
+        }
 
-                progressDots.appendChild(dot);
-            }
+        progressDots.appendChild(dot);
+        }
         }
 
         // Initialize on load
         window.addEventListener('load', () => {
-            loadProgress();
-            // If user was in a lesson, resume at last question
-            if (typeof currentLevel === 'number' && lessonsData[currentLevel] && typeof currentLessonIndex === 'number' && currentLessonIndex < lessonsData[currentLevel].length) {
-                document.getElementById('mapContainer').classList.add('hidden');
-                document.getElementById('mainContainer').classList.remove('hidden');
-                document.getElementById('navButtons').classList.remove('hidden');
-                loadLesson();
-            } else {
-                document.getElementById('mapContainer').classList.remove('hidden');
-                initializeMap();
-            }
+        loadProgress();
+        // If user was in a lesson, resume at last question
+        if (typeof currentLevel === 'number' && lessonsData[currentLevel] && typeof currentLessonIndex === 'number' && currentLessonIndex < lessonsData[currentLevel].length) {
+        document.getElementById('mapContainer').classList.add('hidden');
+        document.getElementById('mainContainer').classList.remove('hidden');
+        document.getElementById('navButtons').classList.remove('hidden');
+        loadLesson();
+        } else {
+        document.getElementById('mapContainer').classList.remove('hidden');
+        initializeMap();
+        }
 
-            // Start fish animation
-            setInterval(fishJump, 2000);
+        // Start fish animation
+        setInterval(fishJump, 2000);
 
-            // Handle window resize
-            window.addEventListener('resize', initializeMap);
+        // Handle window resize
+        window.addEventListener('resize', initializeMap);
         });
 
         // Handle browser back button
