@@ -50,7 +50,7 @@
             background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(5px);
             border-radius: 40px;
-            border: 8px solid #FFD700; /* Yellow primary outline */
+            border: 8px solid #FFD700;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), inset 0 0 0 4px #FFFFFF;
             padding: 40px;
             display: flex;
@@ -112,16 +112,13 @@
             opacity: 1;
         }
 
-            /* Remove enlarge on hover */
             .level-button:hover {
-                /* No scale */
                 transform: translate(-50%, -50%);
             }
 
-            /* Future lesson buttons (locked): gray and unclickable */
             .level-button.locked {
                 cursor: not-allowed;
-                pointer-events: auto; /* Change from 'none' to 'auto' */
+                pointer-events: auto;
                 opacity: 0.7;
                 filter: grayscale(0.5);
             }
@@ -130,10 +127,9 @@
                     transform: translate(-50%, -50%);
                 }
 
-            /* Previous lesson buttons: normal color, unclickable */
             .level-button.previous {
                 cursor: not-allowed;
-                pointer-events: auto; /* Change from 'none' to 'auto' */
+                pointer-events: auto;
                 filter: none;
                 opacity: 1;
             }
@@ -148,17 +144,15 @@
             z-index: 30;
         }
 
-        /* Location Indicator */
         .location-indicator {
             position: absolute;
-            width: 80px; /* Smaller than buttons */
+            width: 80px;
             height: auto;
             z-index: 20;
             pointer-events: none;
-            transform: translate(-50%, -150%); /* Position above the button */
+            transform: translate(-50%, -150%);
         }
 
-        /* Fish Animation */
         .fish {
             position: absolute;
             width: 54px;
@@ -173,39 +167,32 @@
                 transform: translate(-50%, 28px) rotate(-45deg);
                 opacity: 0;
             }
-
             10% {
                 transform: translate(6px, -6px) rotate(-45deg);
                 opacity: 1;
             }
-
             32% {
                 transform: translate(22px, -36px) rotate(-22deg);
                 opacity: 1;
             }
-
             48% {
                 transform: translate(34px, -40px) rotate(0deg);
                 opacity: 1;
             }
-
             64% {
                 transform: translate(46px, -14px) rotate(22deg);
                 opacity: 1;
             }
-
             80% {
                 transform: translate(56px, 16px) rotate(48deg);
                 opacity: 0.45;
             }
-
             100% {
                 transform: translate(62px, 38px) rotate(62deg);
                 opacity: 0;
             }
         }
 
-        /* Content Area */
         #contentArea {
             flex: 1;
             display: flex;
@@ -215,7 +202,6 @@
             gap: 30px;
         }
 
-        /* Navigation Buttons */
         #navButtons {
             position: fixed;
             bottom: 30px;
@@ -239,11 +225,6 @@
             filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
         }
 
-            /* Remove enlarge on hover for nav buttons */
-            .nav-button:hover {
-                /* No scale */
-            }
-
         #backButton {
             background-image: url('https://github.com/dev-sstoilov/grammar/blob/main/backward_btn.png?raw=true');
         }
@@ -252,7 +233,6 @@
             background-image: url('https://github.com/dev-sstoilov/grammar/blob/main/forward_btn.png?raw=true');
         }
 
-        /* Lesson Types */
         .lesson-content {
             width: 100%;
             max-width: 900px;
@@ -260,13 +240,12 @@
         }
 
         .lesson-title {
-            color: #1E88E5; /* Blue secondary */
+            color: #1E88E5;
             font-size: 2.8rem;
             margin-bottom: 20px;
             text-shadow: 2px 2px 0 rgba(255, 215, 0, 0.3);
         }
 
-        /* YouTube Video Container */
         #videoContainer {
             width: 100%;
             aspect-ratio: 16/9;
@@ -283,7 +262,6 @@
             border: none;
         }
 
-        /* Drag and Drop Styling - FIXED */
         .drag-sentence {
             font-size: 2.5rem;
             color: #333;
@@ -331,7 +309,7 @@
             justify-content: center;
             margin-top: 30px;
             padding: 30px;
-            background: rgba(255, 182, 193, 0.2); /* Pink accent */
+            background: rgba(255, 182, 193, 0.2);
             border-radius: 25px;
             border: 4px solid #FFB6C1;
         }
@@ -350,7 +328,6 @@
         }
 
             .draggable-word:hover {
-                /* No translateY or scale */
                 box-shadow: 0 8px 20px rgba(30, 136, 229, 0.4);
             }
 
@@ -367,10 +344,9 @@
                 opacity: 0.6 !important;
             }
 
-        /* Click to Answer Styling */
         .click-question {
             font-size: 2rem;
-            color: #E91E63; /* Pink accent */
+            color: #E91E63;
             margin-bottom: 30px;
             padding: 15px 30px;
             background: white;
@@ -426,7 +402,74 @@
                     font-weight: bold;
                 }
 
-        /* Feedback */
+        /* Character correction styles */
+        .word-display {
+            font-size: 4rem;
+            color: #333;
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 25px;
+            border: 4px solid #1E88E5;
+            letter-spacing: 8px;
+        }
+
+        .clickable-char {
+            display: inline-block;
+            padding: 10px;
+            margin: 0 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 10px;
+        }
+
+            .clickable-char:hover {
+                background: rgba(233, 30, 99, 0.2);
+            }
+
+            .clickable-char.selected {
+                background: rgba(255, 215, 0, 0.5);
+                border: 3px solid #FFD700;
+            }
+
+        .correction-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(255, 182, 193, 0.2);
+            border-radius: 25px;
+            border: 4px solid #FFB6C1;
+        }
+
+        .correction-option {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #E91E63, #F06292);
+            color: white;
+            font-size: 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+            border: 3px solid white;
+        }
+
+            .correction-option:hover {
+                box-shadow: 0 8px 20px rgba(233, 30, 99, 0.4);
+            }
+
+            .correction-option.disabled {
+                background: #bbb !important;
+                color: #888 !important;
+                border: 3px solid #ccc !important;
+                cursor: not-allowed !important;
+                pointer-events: none !important;
+                opacity: 0.6 !important;
+            }
+
         .feedback {
             font-size: 2rem;
             padding: 20px 40px;
@@ -451,13 +494,11 @@
             0% {
                 opacity: 0;
             }
-
             100% {
                 opacity: 1;
             }
         }
 
-        /* Progress Indicator */
         .progress-dots {
             display: flex;
             gap: 15px;
@@ -481,7 +522,6 @@
                 background: #4CAF50;
             }
 
-        /* Responsive */
         @media (max-width: 768px) {
             #mainContainer {
                 width: 95%;
@@ -507,6 +547,16 @@
                 font-size: 1.6rem;
             }
 
+            .word-display {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+
+            .correction-option {
+                font-size: 1.5rem;
+                padding: 12px 24px;
+            }
+
             .level-button {
                 width: 60px;
                 height: 60px;
@@ -530,17 +580,14 @@
             }
         }
 
-        /* Hide elements */
         .hidden {
             display: none !important;
         }
     </style>
 </head>
 <body>
-    <!-- Background -->
     <div id="backgroundWrapper"></div>
 
-    <!-- Interactive Map (Default Home Page) -->
     <div id="mapContainer">
         <div id="mapWrapper">
             <img id="mapImage" src="https://github.com/dev-sstoilov/grammar/blob/main/Untitled.png?raw=true" alt="Карта">
@@ -549,712 +596,825 @@
         </div>
     </div>
 
-    <!-- Main Container -->
     <div id="mainContainer" class="hidden">
-        <!-- Home Button -->
         <img id="homeBtn" src="https://github.com/dev-sstoilov/grammar/blob/main/home_btn.png?raw=true" alt="Home" style="position:absolute;top:24px;left:24px;width:64px;height:64px;z-index:1000;cursor:pointer;" onclick="goHome()" />
-        <div id="contentArea">
-            <!-- Content will be dynamically rendered here -->
-        </div>
-
-        <!-- Progress Dots -->
+        <div id="contentArea"></div>
         <div class="progress-dots" id="progressDots"></div>
     </div>
 
-    <!-- Navigation Buttons -->
     <div id="navButtons" class="hidden">
         <button class="nav-button" id="backButton" onclick="previousLesson()"></button>
         <button class="nav-button" id="forwardButton" onclick="nextLesson()"></button>
     </div>
 
     <script>
-        // Audio elements for feedback
         const correctSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3');
         const incorrectSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3');
 
-        // Game state
         let currentLevel = 1;
         let currentLessonIndex = 0;
         let completedLessons = new Set();
         let mistakesCount = 0;
         let currentLessonData = null;
 
-        // Cache keys
         const CACHE_KEY = 'grammar_garden_progress';
 
         function saveProgress() {
-        const data = {
-        currentLevel,
-        currentLessonIndex,
-        completedLessons: Array.from(completedLessons),
-        mistakesCount
-        };
-        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+            const data = {
+                currentLevel,
+                currentLessonIndex,
+                completedLessons: Array.from(completedLessons),
+                mistakesCount
+            };
+            localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         }
 
         function loadProgress() {
-        const data = localStorage.getItem(CACHE_KEY);
-        if (data) {
-        try {
-        const parsed = JSON.parse(data);
-        if (typeof parsed.currentLevel === 'number') currentLevel = parsed.currentLevel;
-        if (typeof parsed.currentLessonIndex === 'number') currentLessonIndex = parsed.currentLessonIndex;
-        if (Array.isArray(parsed.completedLessons)) completedLessons = new Set(parsed.completedLessons);
-        if (typeof parsed.mistakesCount === 'number') mistakesCount = parsed.mistakesCount;
-        } catch (e) {
-        // Ignore parse errors
-        }
-        }
+            const data = localStorage.getItem(CACHE_KEY);
+            if (data) {
+                try {
+                    const parsed = JSON.parse(data);
+                    if (typeof parsed.currentLevel === 'number') currentLevel = parsed.currentLevel;
+                    if (typeof parsed.currentLessonIndex === 'number') currentLessonIndex = parsed.currentLessonIndex;
+                    if (Array.isArray(parsed.completedLessons)) completedLessons = new Set(parsed.completedLessons);
+                    if (typeof parsed.mistakesCount === 'number') mistakesCount = parsed.mistakesCount;
+                } catch (e) {
+                    // Ignore parse errors
+                }
+            }
         }
 
         function clearProgress() {
-        localStorage.removeItem(CACHE_KEY);
+            localStorage.removeItem(CACHE_KEY);
         }
 
-        // Bulgarian lesson data for levels 1-10
         const lessonsData = {
-        1: [
-        {
-        type: "video",
-        title: "Запознаване със съществителните имена",
-        videoUrl: "https://www.youtube.com/embed/7y2jL3QrZ1I",
-        duration: 60
-        },
-        {
-        type: "drag_drop",
-        title: "Плъзни съществителните имена",
-        sentence: "{съществително} бяга в парка. Детето играе с {съществително}.",
-        wordBank: ["куче", "топка", "маса", "котка", "книга"],
-        correctAnswers: ["куче", "топка"],
-        dropZones: 2
-        },
-        {
-        type: "click_answer",
-        title: "Намери съществителното име",
-        question: "Кликни върху съществителното име в изречението:",
-        sentence: "Голямото червено ябълко падна от дървото.",
-        correctAnswer: "ябълко",
-        options: ["голямото", "червено", "ябълко", "падна", "от", "дървото"]
-        }
-        ],
-        2: [
-        {
-        type: "video",
-        title: "Какво са глаголите?",
-        videoUrl: "https://www.youtube.com/embed/ineCCpqpZrM",
-        duration: 75
-        },
-        {
-        type: "drag_drop",
-        title: "Действия и глаголи",
-        sentence: "Аз обичам да {глагол} и да {глагол}.",
-        wordBank: ["бягам", "скачам", "спя", "ям", "чета"],
-        correctAnswers: ["чета", "бягам"],
-        dropZones: 2
-        },
-        {
-        type: "click_answer",
-        title: "Намери глагола",
-        question: "Кликни върху глагола в изречението:",
-        sentence: "Момичето рисува красива картина.",
-        correctAnswer: "рисува",
-        options: ["момичето", "рисува", "красива", "картина"]
-        }
-        ],
-        3: [
-        {
-        type: "video",
-        title: "Прилагателни имена - описание",
-        videoUrl: "https://www.youtube.com/embed/sYCeuUrtfG0",
-        duration: 65
-        },
-        {
-        type: "drag_drop",
-        title: "Опиши предмета",
-        sentence: "Това е {прилагателно} и {прилагателно} къща.",
-        wordBank: ["голяма", "синя", "нова", "стара", "висока"],
-        correctAnswers: ["нова", "синя"],
-        dropZones: 2
-        }
-        ],
-        4: [
-        {
-        type: "video",
-        title: "Множествено число",
-        videoUrl: "https://www.youtube.com/embed/L0xOh7mJnyM",
-        duration: 70
-        },
-        {
-        type: "drag_drop",
-        title: "Единствено и множествено число",
-        sentence: "Едно {единствено} и три {множествено}.",
-        wordBank: ["котка", "котки", "куче", "кучета", "стол", "столове"],
-        correctAnswers: ["куче", "кучета"],
-        dropZones: 2
-        }
-        ],
-        5: [
-        {
-        type: "video",
-        title: "Минало време",
-        videoUrl: "https://www.youtube.com/embed/lvtD-GeZxSg",
-        duration: 80
-        },
-        {
-        type: "drag_drop",
-        title: "Преминало време на глаголи",
-        sentence: "Вчера аз {минало време}, а днес аз {сегашно време}.",
-        wordBank: ["играх", "играя", "четох", "чета", "писах", "пиша"],
-        correctAnswers: ["четох", "пиша"],
-        dropZones: 2
-        }
-        ],
-        6: [
-        {
-        type: "video",
-        title: "Бъдеще време",
-        videoUrl: "https://www.youtube.com/embed/2PonPtWKC5Q",
-        duration: 75
-        },
-        {
-        type: "drag_drop",
-        title: "Какво ще правим утре?",
-        sentence: "Утре ние ще {бъдеще време} и ще {бъдеще време}.",
-        wordBank: ["отидем", "учим", "гледаме", "играем", "почиваме"],
-        correctAnswers: ["учим", "играем"],
-        dropZones: 2
-        }
-        ],
-        7: [
-        {
-        type: "video",
-        title: "Въпросителни изречения",
-        videoUrl: "https://www.youtube.com/embed/vg6EJOkjFGY",
-        duration: 70
-        },
-        {
-        type: "click_answer",
-        title: "Поправи въпроса",
-        question: "Кликни върху грешната дума във въпроса:",
-        sentence: "Къде си отиде вчера?",
-        correctAnswer: "отиде",
-        options: ["къде", "си", "отиде", "вчера"]
-        }
-        ],
-        8: [
-        {
-        type: "video",
-        title: "Съюзи и свързване",
-        videoUrl: "https://www.youtube.com/embed/0qZ9FOD_b98",
-        duration: 85
-        },
-        {
-        type: "drag_drop",
-        title: "Свържи изреченията",
-        sentence: "Аз искам сладолед {съюз} не мога да го купя.",
-        wordBank: ["но", "и", "защото", "ако", "когато"],
-        correctAnswers: ["но"],
-        dropZones: 1
-        }
-        ],
-        9: [
-        {
-        type: "video",
-        title: "Предлози в изреченията",
-        videoUrl: "https://www.youtube.com/embed/8F0NYBBKczM",
-        duration: 90
-        },
-        {
-        type: "drag_drop",
-        title: "Избери правилния предлог",
-        sentence: "Книгата е {предлог} масата, а чашата е {предлог} нея.",
-        wordBank: ["върху", "под", "до", "в", "пред"],
-        correctAnswers: ["върху", "до"],
-        dropZones: 2
-        }
-        ],
-        10: [
-        {
-        type: "video",
-        title: "Сложни изречения",
-        videoUrl: "https://www.youtube.com/embed/mf0E6rGpFqI",
-        duration: 95
-        },
-        {
-        type: "drag_drop",
-        title: "Състави сложно изречение",
-        sentence: "Ако вали {глагол}, ще остана {съществително}.",
-        wordBank: ["у дома", "дъжд", "училище", "вътре", "запушва"],
-        correctAnswers: ["дъжд", "у дома"],
-        dropZones: 2
-        },
-        {
-        type: "click_answer",
-        title: "Финално предизвикателство",
-        question: "Намери всички грешки в изречението:",
-        sentence: "Децата играят навън когато слънцето свети ярко.",
-        correctAnswer: "когато",
-        options: ["децата", "играят", "навън", "когато", "слънцето", "свети", "ярко"]
-        }
-        ]
+            1: [
+                {
+                    type: "video",
+                    title: "Запознаване със съществителните имена",
+                    videoUrl: "https://www.youtube.com/embed/7y2jL3QrZ1I",
+                    duration: 60
+                },
+                {
+                    type: "drag_drop",
+                    title: "Плъзни съществителните имена",
+                    sentence: "{съществително} бяга в парка. Детето играе с {съществително}.",
+                    wordBank: ["куче", "топка", "маса", "котка", "книга"],
+                    correctAnswers: ["куче", "топка"],
+                    dropZones: 2
+                },
+                {
+                    type: "click_answer",
+                    title: "Намери съществителното име",
+                    question: "Кликни върху съществителното име в изречението:",
+                    sentence: "Голямото червено ябълко падна от дървото.",
+                    correctAnswer: "ябълко",
+                    options: ["голямото", "червено", "ябълко", "падна", "от", "дървото"]
+                },
+                {
+                    type: "char_correction",
+                    title: "Поправи думата",
+                    instruction: "Кликни върху грешната буква:",
+                    word: "котка",
+                    wrongWord: "котка",
+                    wrongCharIndex: 2,
+                    correctionOptions: ["т", "п", "к", "д"],
+                    correctChar: "т"
+                }
+            ],
+            2: [
+                {
+                    type: "video",
+                    title: "Какво са глаголите?",
+                    videoUrl: "https://www.youtube.com/embed/ineCCpqpZrM",
+                    duration: 75
+                },
+                {
+                    type: "drag_drop",
+                    title: "Действия и глаголи",
+                    sentence: "Аз обичам да {глагол} и да {глагол}.",
+                    wordBank: ["бягам", "скачам", "спя", "ям", "чета"],
+                    correctAnswers: ["чета", "бягам"],
+                    dropZones: 2
+                },
+                {
+                    type: "click_answer",
+                    title: "Намери глагола",
+                    question: "Кликни върху глагола в изречението:",
+                    sentence: "Момичето рисува красива картина.",
+                    correctAnswer: "рисува",
+                    options: ["момичето", "рисува", "красива", "картина"]
+                }
+            ],
+            3: [
+                {
+                    type: "video",
+                    title: "Прилагателни имена - описание",
+                    videoUrl: "https://www.youtube.com/embed/sYCeuUrtfG0",
+                    duration: 65
+                },
+                {
+                    type: "drag_drop",
+                    title: "Опиши предмета",
+                    sentence: "Това е {прилагателно} и {прилагателно} къща.",
+                    wordBank: ["голяма", "синя", "нова", "стара", "висока"],
+                    correctAnswers: ["нова", "синя"],
+                    dropZones: 2
+                }
+            ],
+            4: [
+                {
+                    type: "video",
+                    title: "Множествено число",
+                    videoUrl: "https://www.youtube.com/embed/L0xOh7mJnyM",
+                    duration: 70
+                },
+                {
+                    type: "drag_drop",
+                    title: "Единствено и множествено число",
+                    sentence: "Едно {единствено} и три {множествено}.",
+                    wordBank: ["котка", "котки", "куче", "кучета", "стол", "столове"],
+                    correctAnswers: ["куче", "кучета"],
+                    dropZones: 2
+                }
+            ],
+            5: [
+                {
+                    type: "video",
+                    title: "Минало време",
+                    videoUrl: "https://www.youtube.com/embed/lvtD-GeZxSg",
+                    duration: 80
+                },
+                {
+                    type: "drag_drop",
+                    title: "Преминало време на глаголи",
+                    sentence: "Вчера аз {минало време}, а днес аз {сегашно време}.",
+                    wordBank: ["играх", "играя", "четох", "чета", "писах", "пиша"],
+                    correctAnswers: ["четох", "пиша"],
+                    dropZones: 2
+                }
+            ],
+            6: [
+                {
+                    type: "video",
+                    title: "Бъдеще време",
+                    videoUrl: "https://www.youtube.com/embed/2PonPtWKC5Q",
+                    duration: 75
+                },
+                {
+                    type: "drag_drop",
+                    title: "Какво ще правим утре?",
+                    sentence: "Утре ние ще {бъдеще време} и ще {бъдеще време}.",
+                    wordBank: ["отидем", "учим", "гледаме", "играем", "почиваме"],
+                    correctAnswers: ["учим", "играем"],
+                    dropZones: 2
+                }
+            ],
+            7: [
+                {
+                    type: "video",
+                    title: "Въпросителни изречения",
+                    videoUrl: "https://www.youtube.com/embed/vg6EJOkjFGY",
+                    duration: 70
+                },
+                {
+                    type: "click_answer",
+                    title: "Поправи въпроса",
+                    question: "Кликни върху грешната дума във въпроса:",
+                    sentence: "Къде си отиде вчера?",
+                    correctAnswer: "отиде",
+                    options: ["къде", "си", "отиде", "вчера"]
+                }
+            ],
+            8: [
+                {
+                    type: "video",
+                    title: "Съюзи и свързване",
+                    videoUrl: "https://www.youtube.com/embed/0qZ9FOD_b98",
+                    duration: 85
+                },
+                {
+                    type: "drag_drop",
+                    title: "Свържи изреченията",
+                    sentence: "Аз искам сладолед {съюз} не мога да го купя.",
+                    wordBank: ["но", "и", "защото", "ако", "когато"],
+                    correctAnswers: ["но"],
+                    dropZones: 1
+                }
+            ],
+            9: [
+                {
+                    type: "video",
+                    title: "Предлози в изреченията",
+                    videoUrl: "https://www.youtube.com/embed/8F0NYBBKczM",
+                    duration: 90
+                },
+                {
+                    type: "drag_drop",
+                    title: "Избери правилния предлог",
+                    sentence: "Книгата е {предлог} масата, а чашата е {предлог} нея.",
+                    wordBank: ["върху", "под", "до", "в", "пред"],
+                    correctAnswers: ["върху", "до"],
+                    dropZones: 2
+                }
+            ],
+            10: [
+                {
+                    type: "video",
+                    title: "Сложни изречения",
+                    videoUrl: "https://www.youtube.com/embed/mf0E6rGpFqI",
+                    duration: 95
+                },
+                {
+                    type: "drag_drop",
+                    title: "Състави сложно изречение",
+                    sentence: "Ако вали {глагол}, ще остана {съществително}.",
+                    wordBank: ["у дома", "дъжд", "училище", "вътре", "запушва"],
+                    correctAnswers: ["дъжд", "у дома"],
+                    dropZones: 2
+                },
+                {
+                    type: "click_answer",
+                    title: "Финално предизвикателство",
+                    question: "Намери всички грешки в изречението:",
+                    sentence: "Децата играят навън когато слънцето свети ярко.",
+                    correctAnswer: "когато",
+                    options: ["децата", "играят", "навън", "когато", "слънцето", "свети", "ярко"]
+                }
+            ]
         };
 
-        // Map setup
         const BUTTON_POSITIONS = [
-        { x: 0.0563, y: 0.1162 }, { x: 0.1680, y: 0.2488 }, { x: 0.1742, y: 0.4780 },
-        { x: 0.2199, y: 0.7237 }, { x: 0.3496, y: 0.6750 }, { x: 0.4043, y: 0.4639 },
-        { x: 0.5016, y: 0.2998 }, { x: 0.6082, y: 0.4843 }, { x: 0.6859, y: 0.6601 },
-        { x: 0.7902, y: 0.4945 }, { x: 0.8949, y: 0.4741 }, { x: 0.9406, y: 0.7590 }
+            { x: 0.0563, y: 0.1162 }, { x: 0.1680, y: 0.2488 }, { x: 0.1742, y: 0.4780 },
+            { x: 0.2199, y: 0.7237 }, { x: 0.3496, y: 0.6750 }, { x: 0.4043, y: 0.4639 },
+            { x: 0.5016, y: 0.2998 }, { x: 0.6082, y: 0.4843 }, { x: 0.6859, y: 0.6601 },
+            { x: 0.7902, y: 0.4945 }, { x: 0.8949, y: 0.4741 }, { x: 0.9406, y: 0.7590 }
         ];
 
         let lastFishIndex = -1;
 
         function initializeMap() {
-        const wrapper = document.getElementById('mapWrapper');
-        const container = document.getElementById('buttonContainer');
+            const wrapper = document.getElementById('mapWrapper');
+            const container = document.getElementById('buttonContainer');
 
-        // Clear existing buttons
-        container.innerHTML = '';
+            container.innerHTML = '';
 
-        // Remove existing location indicators
-        const existingIndicators = document.querySelectorAll('.location-indicator');
-        existingIndicators.forEach(indicator => indicator.remove());
+            const existingIndicators = document.querySelectorAll('.location-indicator');
+            existingIndicators.forEach(indicator => indicator.remove());
 
-        // Create buttons for all 12 positions
-        BUTTON_POSITIONS.forEach((pos, index) => {
-        const levelNum = index + 1;
-        const btn = document.createElement('button');
-        btn.className = 'level-button';
-        btn.textContent = levelNum;
-        btn.dataset.level = levelNum;
+            BUTTON_POSITIONS.forEach((pos, index) => {
+                const levelNum = index + 1;
+                const btn = document.createElement('button');
+                btn.className = 'level-button';
+                btn.textContent = levelNum;
+                btn.dataset.level = levelNum;
 
-        // Position the button
-        const w = wrapper.clientWidth;
-        const h = wrapper.clientHeight;
-        btn.style.left = `${pos.x * w}px`;
-        btn.style.top = `${pos.y * h}px`;
+                const w = wrapper.clientWidth;
+                const h = wrapper.clientHeight;
+                btn.style.left = `${pos.x * w}px`;
+                btn.style.top = `${pos.y * h}px`;
 
-        if (levelNum < currentLevel) {
-        // Previous lessons: normal color, unclickable
-        btn.classList.add('previous');
-        } else if (levelNum === currentLevel) {
-        // Current level: clickable
-        btn.onclick = () => selectLevel(levelNum);
+                if (levelNum < currentLevel) {
+                    btn.classList.add('previous');
+                } else if (levelNum === currentLevel) {
+                    btn.onclick = () => selectLevel(levelNum);
 
-        // Add location indicator above this button
-        const indicator = document.createElement('img');
-        indicator.src = 'https://github.com/dev-sstoilov/grammar/blob/main/location.png?raw=true';
-        indicator.className = 'location-indicator';
-        indicator.style.left = btn.style.left;
-        indicator.style.top = btn.style.top;
-        wrapper.appendChild(indicator);
-        } else {
-        // Future lessons: gray and unclickable
-        btn.classList.add('locked');
-        }
+                    const indicator = document.createElement('img');
+                    indicator.src = 'https://github.com/dev-sstoilov/grammar/blob/main/location.png?raw=true';
+                    indicator.className = 'location-indicator';
+                    indicator.style.left = btn.style.left;
+                    indicator.style.top = btn.style.top;
+                    wrapper.appendChild(indicator);
+                } else {
+                    btn.classList.add('locked');
+                }
 
-        container.appendChild(btn);
-        });
+                container.appendChild(btn);
+            });
         }
 
         function spawnFishAt(index) {
-        const wrapper = document.getElementById('mapWrapper');
-        const w = wrapper.clientWidth;
-        const h = wrapper.clientHeight;
-        const p = BUTTON_POSITIONS[index];
+            const wrapper = document.getElementById('mapWrapper');
+            const w = wrapper.clientWidth;
+            const h = wrapper.clientHeight;
+            const p = BUTTON_POSITIONS[index];
 
-        const fish = document.createElement('img');
-        fish.src = 'https://github.com/dev-sstoilov/grammar/blob/main/fish.png?raw=true';
-        fish.className = 'fish';
+            const fish = document.createElement('img');
+            fish.src = 'https://github.com/dev-sstoilov/grammar/blob/main/fish.png?raw=true';
+            fish.className = 'fish';
 
-        const START_OFFSET_X = -40;
-        const START_OFFSET_Y = 40;
+            const START_OFFSET_X = -40;
+            const START_OFFSET_Y = 40;
 
-        fish.style.left = `${p.x * w + START_OFFSET_X}px`;
-        fish.style.top = `${p.y * h + START_OFFSET_Y}px`;
+            fish.style.left = `${p.x * w + START_OFFSET_X}px`;
+            fish.style.top = `${p.y * h + START_OFFSET_Y}px`;
 
-        wrapper.appendChild(fish);
+            wrapper.appendChild(fish);
 
-        fish.offsetHeight; // Force reflow
+            fish.offsetHeight;
 
-        fish.style.animation = 'fishJump 1.8s linear';
+            fish.style.animation = 'fishJump 1.8s linear';
 
-        setTimeout(() => fish.remove(), 1900);
+            setTimeout(() => fish.remove(), 1900);
         }
 
         function fishJump() {
-        const forbidden = [1, 2, 4, 7, 9];
-        let indices = [...BUTTON_POSITIONS.keys()]
-        .filter(i => i !== lastFishIndex && !forbidden.includes(i))
-        .sort(() => Math.random() - 0.5);
+            const forbidden = [1, 2, 4, 7, 9];
+            let indices = [...BUTTON_POSITIONS.keys()]
+                .filter(i => i !== lastFishIndex && !forbidden.includes(i))
+                .sort(() => Math.random() - 0.5);
 
-        const doubleJump = Math.random() < 0.1;
+            const doubleJump = Math.random() < 0.1;
 
-        if (indices.length > 0) {
-        spawnFishAt(indices[0]);
-        lastFishIndex = indices[0];
-        }
+            if (indices.length > 0) {
+                spawnFishAt(indices[0]);
+                lastFishIndex = indices[0];
+            }
 
-        if (doubleJump && indices.length > 1) {
-        spawnFishAt(indices[1]);
-        }
+            if (doubleJump && indices.length > 1) {
+                spawnFishAt(indices[1]);
+            }
         }
 
         function goHome() {
-        currentLessonIndex = 0;
-        saveProgress();
-        document.getElementById('mapContainer').classList.remove('hidden');
-        document.getElementById('mainContainer').classList.add('hidden');
-        document.getElementById('navButtons').classList.add('hidden');
-        initializeMap();
+            currentLessonIndex = 0;
+            saveProgress();
+            document.getElementById('mapContainer').classList.remove('hidden');
+            document.getElementById('mainContainer').classList.add('hidden');
+            document.getElementById('navButtons').classList.add('hidden');
+            initializeMap();
         }
 
         function selectLevel(level) {
-        currentLevel = level;
-        currentLessonIndex = 0;
-        mistakesCount = 0;
-        saveProgress();
+            currentLevel = level;
+            currentLessonIndex = 0;
+            mistakesCount = 0;
+            saveProgress();
 
-        // Hide map, show lesson container
-        document.getElementById('mapContainer').classList.add('hidden');
-        document.getElementById('mainContainer').classList.remove('hidden');
-        document.getElementById('navButtons').classList.remove('hidden');
+            document.getElementById('mapContainer').classList.add('hidden');
+            document.getElementById('mainContainer').classList.remove('hidden');
+            document.getElementById('navButtons').classList.remove('hidden');
 
-        loadLesson();
+            loadLesson();
         }
 
         function loadLesson() {
-        const levelLessons = lessonsData[currentLevel];
-        if (!levelLessons || currentLessonIndex >= levelLessons.length) {
-        completeLevel();
-        return;
-        }
+            const levelLessons = lessonsData[currentLevel];
+            if (!levelLessons || currentLessonIndex >= levelLessons.length) {
+                completeLevel();
+                return;
+            }
 
-        currentLessonData = levelLessons[currentLessonIndex];
-        renderLesson(currentLessonData);
-        updateProgressDots(currentLessonIndex);
-        saveProgress();
+            currentLessonData = levelLessons[currentLessonIndex];
+            renderLesson(currentLessonData);
+            updateProgressDots(currentLessonIndex);
+            saveProgress();
         }
 
         function renderLesson(lesson) {
-        const contentArea = document.getElementById('contentArea');
+            const contentArea = document.getElementById('contentArea');
 
-        if (lesson.type === "video") {
-        contentArea.innerHTML = `
-        <h1 class="lesson-title">${lesson.title}</h1>
-        <div id="videoContainer">
-        <iframe class="youtube-video"
-        src="${lesson.videoUrl}"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-        </iframe>
-        </div>
-        <div class="feedback" id="feedbackMessage">Гледай видеото, за да продължиш...</div>
-        `;
+            if (lesson.type === "video") {
+                contentArea.innerHTML = `
+                    <h1 class="lesson-title">${lesson.title}</h1>
+                    <div id="videoContainer">
+                        <iframe class="youtube-video"
+                            src="${lesson.videoUrl}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="feedback" id="feedbackMessage">Гледай видеото, за да продължиш...</div>
+                `;
 
-        // Auto-advance after video duration
-        setTimeout(() => {
-        document.getElementById('feedbackMessage').innerHTML =
-        'Страхотно гледане! <br>Кликни "Напред", за да продължиш.';
-        document.getElementById('feedbackMessage').classList.add('correct');
-        }, lesson.duration * 1000);
+                setTimeout(() => {
+                    document.getElementById('feedbackMessage').innerHTML = 'Страхотно гледане! <br>Кликни "Напред", за да продължиш.';
+                    document.getElementById('feedbackMessage').classList.add('correct');
+                }, lesson.duration * 1000);
+            }
+            else if (lesson.type === "drag_drop") {
+                contentArea.innerHTML = `
+                    <h1 class="lesson-title">${lesson.title}</h1>
+                    <div class="drag-sentence" id="dragSentence">
+                        ${renderSentenceWithDropZones(lesson.sentence, lesson.dropZones)}
+                    </div>
+                    <div class="word-bank" id="wordBank">
+                        ${lesson.wordBank.map(word =>
+                            `<div class="draggable-word" draggable="true" data-word="${word}">${word}</div>`
+                        ).join('')}
+                    </div>
+                    <div class="feedback" id="feedbackMessage"></div>
+                `;
+
+                initializeDragAndDrop(lesson.correctAnswers);
+            }
+            else if (lesson.type === "click_answer") {
+                contentArea.innerHTML = `
+                    <h1 class="lesson-title">${lesson.title}</h1>
+                    <div class="click-question">${lesson.question}</div>
+                    <div class="click-sentence" id="clickSentence">
+                        ${renderSentenceWithClickableWords(lesson.sentence, lesson.options)}
+                    </div>
+                    <div class="feedback" id="feedbackMessage"></div>
+                `;
+
+                initializeClickToAnswer(lesson.correctAnswer);
+            }
+            else if (lesson.type === "char_correction") {
+                contentArea.innerHTML = `
+                    <h1 class="lesson-title">${lesson.title}</h1>
+                    <div class="click-question">${lesson.instruction}</div>
+                    <div class="word-display" id="wordDisplay">
+                        ${renderWordWithClickableChars(lesson.wrongWord)}
+                    </div>
+                    <div class="correction-options hidden" id="correctionOptions">
+                        ${lesson.correctionOptions.map(char =>
+                            `<div class="correction-option" data-char="${char}">${char}</div>`
+                        ).join('')}
+                    </div>
+                    <div class="feedback" id="feedbackMessage"></div>
+                `;
+
+                initializeCharCorrection(lesson.wrongCharIndex, lesson.correctChar, lesson.word);
+            }
         }
-        else if (lesson.type === "drag_drop") {
-        contentArea.innerHTML = `
-        <h1 class="lesson-title">${lesson.title}</h1>
-        <div class="drag-sentence" id="dragSentence">
-        ${renderSentenceWithDropZones(lesson.sentence, lesson.dropZones)}
-        </div>
-        <div class="word-bank" id="wordBank">
-        ${lesson.wordBank.map(word =>
-        `<div class="draggable-word" draggable="true" data-word="${word}">${word}</div>`
-        ).join('')}
-        </div>
-        <div class="feedback" id="feedbackMessage"></div>
-        `;
 
-        initializeDragAndDrop(lesson.correctAnswers);
-        }
-        else if (lesson.type === "click_answer") {
-        contentArea.innerHTML = `
-        <h1 class="lesson-title">${lesson.title}</h1>
-        <div class="click-question">${lesson.question}</div>
-        <div class="click-sentence" id="clickSentence">
-        ${renderSentenceWithClickableWords(lesson.sentence, lesson.options)}
-        </div>
-        <div class="feedback" id="feedbackMessage"></div>
-        `;
-
-        initializeClickToAnswer(lesson.correctAnswer);
-        }
-        }
-
-        // FIXED: This function now properly handles multiple placeholders
         function renderSentenceWithDropZones(sentence, dropZoneCount) {
-        // Split by placeholders like {noun}
-        const parts = sentence.split(/{[^}]+}/g);
-        let result = '';
+            const parts = sentence.split(/{[^}]+}/g);
+            let result = '';
 
-        for (let i = 0; i < parts.length; i++) {
-        result += parts[i];
-        if (i < dropZoneCount) {
-        result += `<span class="drop-zone" data-index="${i}"></span>`;
-        }
-        }
-        return result;
+            for (let i = 0; i < parts.length; i++) {
+                result += parts[i];
+                if (i < dropZoneCount) {
+                    result += `<span class="drop-zone" data-index="${i}"></span>`;
+                }
+            }
+            return result;
         }
 
         function renderSentenceWithClickableWords(sentence, options) {
-        const words = sentence.split(' ');
-        return words.map(word => {
-        const cleanWord = word.replace(/[.,!?]/g, '').toLowerCase();
-        if (options.includes(cleanWord)) {
-        return `<span class="clickable-word" data-word="${cleanWord}">${word}</span>`;
+            const words = sentence.split(' ');
+            return words.map(word => {
+                const cleanWord = word.replace(/[.,!?]/g, '').toLowerCase();
+                if (options.includes(cleanWord)) {
+                    return `<span class="clickable-word" data-word="${cleanWord}">${word}</span>`;
+                }
+                return word + ' ';
+            }).join(' ');
         }
-        return word + ' ';
-        }).join(' ');
+
+        function renderWordWithClickableChars(word) {
+            return word.split('').map((char, index) =>
+                `<span class="clickable-char" data-index="${index}">${char}</span>`
+            ).join('');
         }
 
         function initializeDragAndDrop(correctAnswers) {
-        const draggables = document.querySelectorAll('.draggable-word');
-        const dropZones = document.querySelectorAll('.drop-zone');
-        let droppedWords = new Array(correctAnswers.length).fill(null);
-        let correctCount = 0;
+            const draggables = document.querySelectorAll('.draggable-word');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let droppedWords = new Array(correctAnswers.length).fill(null);
+            let correctCount = 0;
 
-        draggables.forEach(draggable => {
-        draggable.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', e.target.dataset.word);
-        e.target.classList.add('dragging');
-        });
+            // Add click-to-place functionality
+            draggables.forEach(draggable => {
+                // Drag start
+                draggable.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.dataset.word);
+                    e.target.classList.add('dragging');
+                });
 
-        draggable.addEventListener('dragend', (e) => {
-        e.target.classList.remove('dragging');
-        });
-        });
+                draggable.addEventListener('dragend', (e) => {
+                    e.target.classList.remove('dragging');
+                });
 
-        dropZones.forEach(zone => {
-        zone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        zone.classList.add('active');
-        });
+                // Click to place
+                draggable.addEventListener('click', (e) => {
+                    if (draggable.classList.contains('disabled')) return;
 
-        zone.addEventListener('dragleave', () => {
-        zone.classList.remove('active');
-        });
+                    const word = draggable.dataset.word;
+                    
+                    // Find first empty drop zone
+                    const emptyZone = Array.from(dropZones).find(zone => !zone.innerHTML.trim());
+                    
+                    if (emptyZone) {
+                        placeWordInZone(word, emptyZone, dropZones, droppedWords, correctAnswers, draggable);
+                    }
+                });
+            });
 
-        zone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        zone.classList.remove('active');
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('active');
+                });
 
-        const word = e.dataTransfer.getData('text/plain');
-        const index = parseInt(zone.dataset.index);
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('active');
+                });
 
-        // Remove from previous position if already placed
-        if (droppedWords.includes(word)) {
-        const prevIndex = droppedWords.indexOf(word);
-        if (prevIndex !== -1) {
-        dropZones[prevIndex].innerHTML = '';
-        droppedWords[prevIndex] = null;
-        }
-        }
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('active');
 
-        // Place in new position
-        zone.innerHTML = `<span class="draggable-word">${word}</span>`;
-        droppedWords[index] = word;
+                    const word = e.dataTransfer.getData('text/plain');
+                    const draggableElement = Array.from(draggables).find(d => d.dataset.word === word);
+                    
+                    placeWordInZone(word, zone, dropZones, droppedWords, correctAnswers, draggableElement);
+                });
+            });
 
-        // Check answers
-        correctCount = 0;
-        droppedWords.forEach((w, i) => {
-        if (w === correctAnswers[i]) {
-        dropZones[i].classList.add('correct');
-        dropZones[i].classList.remove('incorrect');
-        correctCount++;
-        } else if (w !== null) {
-        dropZones[i].classList.add('incorrect');
-        dropZones[i].classList.remove('correct');
-        }
-        });
+            function placeWordInZone(word, zone, dropZones, droppedWords, correctAnswers, draggableElement) {
+                const index = parseInt(zone.dataset.index);
 
-        // Gray out and disable word if not in correctAnswers
-        if (!correctAnswers.includes(word)) {
-        const wordBank = document.getElementById('wordBank');
-        const wordElems = wordBank.querySelectorAll('.draggable-word');
-        wordElems.forEach(wEl => {
-        if (wEl.dataset.word === word) {
-        wEl.classList.add('disabled');
-        wEl.setAttribute('draggable', 'false');
-        }
-        });
-        }
+                if (droppedWords.includes(word)) {
+                    const prevIndex = droppedWords.indexOf(word);
+                    if (prevIndex !== -1) {
+                        dropZones[prevIndex].innerHTML = '';
+                        droppedWords[prevIndex] = null;
+                    }
+                }
 
-        // Check if all correct
-        if (correctCount === correctAnswers.length) {
-        document.getElementById('feedbackMessage').textContent = 'Отлично! Всичко е вярно!';
-        document.getElementById('feedbackMessage').classList.add('correct');
-        document.getElementById('feedbackMessage').classList.remove('incorrect');
-        correctSound.play();
+                zone.innerHTML = `<span class="draggable-word">${word}</span>`;
+                droppedWords[index] = word;
 
-        // Mark as completed
-        completedLessons.add(currentLevel);
-        setTimeout(() => {
-        if (currentLessonIndex === lessonsData[currentLevel].length - 1) {
-        currentLevel++;
-        }
-        nextLesson();
-        }, 1500);
-        } else if (droppedWords.every(w => w !== null)) {
-        mistakesCount++;
-        document.getElementById('feedbackMessage').textContent = 'Не съвсем вярно. Опитай отново!';
-        document.getElementById('feedbackMessage').classList.add('incorrect');
-        document.getElementById('feedbackMessage').classList.remove('correct');
-        incorrectSound.play();
+                correctCount = 0;
+                droppedWords.forEach((w, i) => {
+                    if (w === correctAnswers[i]) {
+                        dropZones[i].classList.add('correct');
+                        dropZones[i].classList.remove('incorrect');
+                        correctCount++;
+                    } else if (w !== null) {
+                        dropZones[i].classList.add('incorrect');
+                        dropZones[i].classList.remove('correct');
+                    }
+                });
 
-        if (mistakesCount >= 3) {
-        // Go back to previous lesson
-        setTimeout(() => {
-        mistakesCount = 0;
-        currentLessonIndex = Math.max(0, currentLessonIndex - 1);
-        loadLesson();
-        }, 1000);
-        }
-        }
-        });
-        });
+                if (!correctAnswers.includes(word)) {
+                    const wordBank = document.getElementById('wordBank');
+                    const wordElems = wordBank.querySelectorAll('.draggable-word');
+                    wordElems.forEach(wEl => {
+                        if (wEl.dataset.word === word) {
+                            wEl.classList.add('disabled');
+                            wEl.setAttribute('draggable', 'false');
+                        }
+                    });
+                }
+
+                if (correctCount === correctAnswers.length) {
+                    document.getElementById('feedbackMessage').textContent = 'Отлично! Всичко е вярно!';
+                    document.getElementById('feedbackMessage').classList.add('correct');
+                    document.getElementById('feedbackMessage').classList.remove('incorrect');
+                    correctSound.play();
+
+                    completedLessons.add(currentLevel);
+                    setTimeout(() => {
+                        if (currentLessonIndex === lessonsData[currentLevel].length - 1) {
+                            currentLevel++;
+                        }
+                        nextLesson();
+                    }, 1500);
+                } else if (droppedWords.every(w => w !== null)) {
+                    mistakesCount++;
+                    document.getElementById('feedbackMessage').textContent = 'Не съвсем вярно. Опитай отново!';
+                    document.getElementById('feedbackMessage').classList.add('incorrect');
+                    document.getElementById('feedbackMessage').classList.remove('correct');
+                    incorrectSound.play();
+
+                    if (mistakesCount >= 3) {
+                        setTimeout(() => {
+                            mistakesCount = 0;
+                            currentLessonIndex = Math.max(0, currentLessonIndex - 1);
+                            loadLesson();
+                        }, 1000);
+                    }
+                }
+            }
         }
 
         function initializeClickToAnswer(correctAnswer) {
-        const clickableWords = document.querySelectorAll('.clickable-word');
-        let answeredCorrectly = false;
+            const clickableWords = document.querySelectorAll('.clickable-word');
+            let answeredCorrectly = false;
 
-        clickableWords.forEach(word => {
-        word.addEventListener('click', () => {
-        if (answeredCorrectly) return;
+            clickableWords.forEach(word => {
+                word.addEventListener('click', () => {
+                    if (answeredCorrectly) return;
 
-        const selectedWord = word.dataset.word;
+                    const selectedWord = word.dataset.word;
 
-        if (selectedWord === correctAnswer.toLowerCase()) {
-        word.classList.add('clicked');
-        word.classList.remove('incorrect');
+                    if (selectedWord === correctAnswer.toLowerCase()) {
+                        word.classList.add('clicked');
+                        word.classList.remove('incorrect');
 
-        document.getElementById('feedbackMessage').textContent = 'Перфектно! Намери го!';
-        document.getElementById('feedbackMessage').classList.add('correct');
-        document.getElementById('feedbackMessage').classList.remove('incorrect');
-        correctSound.play();
+                        document.getElementById('feedbackMessage').textContent = 'Перфектно! Намери го!';
+                        document.getElementById('feedbackMessage').classList.add('correct');
+                        document.getElementById('feedbackMessage').classList.remove('incorrect');
+                        correctSound.play();
 
-        answeredCorrectly = true;
+                        answeredCorrectly = true;
 
-        // Mark as completed
-        completedLessons.add(currentLevel);
-        setTimeout(() => {
-        if (currentLessonIndex === lessonsData[currentLevel].length - 1) {
-        currentLevel++;
+                        completedLessons.add(currentLevel);
+                        setTimeout(() => {
+                            if (currentLessonIndex === lessonsData[currentLevel].length - 1) {
+                                currentLevel++;
+                            }
+                            nextLesson();
+                        }, 1500);
+                    } else {
+                        word.classList.add('incorrect');
+                        mistakesCount++;
+
+                        document.getElementById('feedbackMessage').textContent = 'Опитай друга дума!';
+                        document.getElementById('feedbackMessage').classList.add('incorrect');
+                        document.getElementById('feedbackMessage').classList.remove('correct');
+                        incorrectSound.play();
+
+                        word.style.pointerEvents = 'none';
+
+                        if (mistakesCount >= 3) {
+                            setTimeout(() => {
+                                mistakesCount = 0;
+                                currentLessonIndex = Math.max(0, currentLessonIndex - 1);
+                                loadLesson();
+                            }, 1000);
+                        }
+                    }
+                });
+            });
         }
-        nextLesson();
-        }, 1500);
-        } else {
-        word.classList.add('incorrect');
-        mistakesCount++;
 
-        document.getElementById('feedbackMessage').textContent = 'Опитай друга дума!';
-        document.getElementById('feedbackMessage').classList.add('incorrect');
-        document.getElementById('feedbackMessage').classList.remove('correct');
-        incorrectSound.play();
+        function initializeCharCorrection(wrongCharIndex, correctChar, correctWord) {
+            const clickableChars = document.querySelectorAll('.clickable-char');
+            const correctionOptions = document.getElementById('correctionOptions');
+            const correctionOptionElements = document.querySelectorAll('.correction-option');
+            let selectedCharIndex = null;
+            let answeredCorrectly = false;
 
-        // Disable this word
-        word.style.pointerEvents = 'none';
+            // Step 1: Click on wrong character
+            clickableChars.forEach(char => {
+                char.addEventListener('click', () => {
+                    if (answeredCorrectly) return;
 
-        if (mistakesCount >= 3) {
-        // Go back to previous lesson
-        setTimeout(() => {
-        mistakesCount = 0;
-        currentLessonIndex = Math.max(0, currentLessonIndex - 1);
-        loadLesson();
-        }, 1000);
-        }
-        }
-        });
-        });
+                    const charIndex = parseInt(char.dataset.index);
+
+                    // Remove previous selection
+                    clickableChars.forEach(c => c.classList.remove('selected'));
+
+                    if (charIndex === wrongCharIndex) {
+                        // Correct character selected
+                        char.classList.add('selected');
+                        selectedCharIndex = charIndex;
+
+                        // Show correction options
+                        correctionOptions.classList.remove('hidden');
+                        document.getElementById('feedbackMessage').textContent = 'Добре! Сега избери правилната буква:';
+                        document.getElementById('feedbackMessage').classList.add('correct');
+                        document.getElementById('feedbackMessage').classList.remove('incorrect');
+                    } else {
+                        // Wrong character selected
+                        mistakesCount++;
+                        document.getElementById('feedbackMessage').textContent = 'Това не е грешната буква. Опитай отново!';
+                        document.getElementById('feedbackMessage').classList.add('incorrect');
+                        document.getElementById('feedbackMessage').classList.remove('correct');
+                        incorrectSound.play();
+
+                        if (mistakesCount >= 3) {
+                            setTimeout(() => {
+                                mistakesCount = 0;
+                                currentLessonIndex = Math.max(0, currentLessonIndex - 1);
+                                loadLesson();
+                            }, 1000);
+                        }
+                    }
+                });
+            });
+
+            // Step 2: Click on correction option
+            correctionOptionElements.forEach(option => {
+                option.addEventListener('click', () => {
+                    if (answeredCorrectly || selectedCharIndex === null) return;
+
+                    const selectedChar = option.dataset.char;
+
+                    if (selectedChar === correctChar) {
+                        // Correct answer
+                        option.style.background = 'linear-gradient(135deg, #4CAF50, #66BB6A)';
+                        
+                        // Update word display
+                        const wordChars = correctWord.split('');
+                        document.getElementById('wordDisplay').innerHTML = wordChars.map((char, index) =>
+                            `<span class="clickable-char">${char}</span>`
+                        ).join('');
+
+                        document.getElementById('feedbackMessage').textContent = 'Браво! Думата е поправена!';
+                        document.getElementById('feedbackMessage').classList.add('correct');
+                        document.getElementById('feedbackMessage').classList.remove('incorrect');
+                        correctSound.play();
+
+                        answeredCorrectly = true;
+
+                        completedLessons.add(currentLevel);
+                        setTimeout(() => {
+                            if (currentLessonIndex === lessonsData[currentLevel].length - 1) {
+                                currentLevel++;
+                            }
+                            nextLesson();
+                        }, 1500);
+                    } else {
+                        // Wrong answer
+                        option.classList.add('disabled');
+                        mistakesCount++;
+
+                        document.getElementById('feedbackMessage').textContent = 'Не съвсем! Опитай друга буква!';
+                        document.getElementById('feedbackMessage').classList.add('incorrect');
+                        document.getElementById('feedbackMessage').classList.remove('correct');
+                        incorrectSound.play();
+
+                        if (mistakesCount >= 3) {
+                            setTimeout(() => {
+                                mistakesCount = 0;
+                                currentLessonIndex = Math.max(0, currentLessonIndex - 1);
+                                loadLesson();
+                            }, 1000);
+                        }
+                    }
+                });
+            });
         }
 
         function nextLesson() {
-        currentLessonIndex++;
-        mistakesCount = 0;
-        saveProgress();
-        loadLesson();
+            currentLessonIndex++;
+            mistakesCount = 0;
+            saveProgress();
+            loadLesson();
         }
 
         function previousLesson() {
-        currentLessonIndex = Math.max(0, currentLessonIndex - 1);
-        mistakesCount = 0;
-        saveProgress();
-        loadLesson();
+            currentLessonIndex = Math.max(0, currentLessonIndex - 1);
+            mistakesCount = 0;
+            saveProgress();
+            loadLesson();
         }
 
         function completeLevel() {
-        const contentArea = document.getElementById('contentArea');
-        contentArea.innerHTML = `
-        <h1 class="lesson-title">🎉 Ниво ${currentLevel} завършено! 🎉</h1>
-        <div style="font-size: 2rem; color: #4CAF50; margin: 30px 0;">
-        Страхотно се справяш!
-        </div>
-        <div style="font-size: 1.8rem; color: #666; max-width: 600px;">
-        Чудесна работа! Научи много нови неща!
-        </div>
-        <button class="start-button" style="margin-top: 40px; padding: 15px 40px; font-size: 1.8rem; background: #1E88E5;" onclick="goHome()">
-        Обратно към картата
-        </button>
-        `;
-        updateProgressDots(-1);
-        saveProgress();
+            const contentArea = document.getElementById('contentArea');
+            contentArea.innerHTML = `
+                <h1 class="lesson-title">🎉 Ниво ${currentLevel} завършено! 🎉</h1>
+                <div style="font-size: 2rem; color: #4CAF50; margin: 30px 0;">
+                    Страхотно се справяш!
+                </div>
+                <div style="font-size: 1.8rem; color: #666; max-width: 600px;">
+                    Чудесна работа! Научи много нови неща!
+                </div>
+                <button class="start-button" style="margin-top: 40px; padding: 15px 40px; font-size: 1.8rem; background: #1E88E5;" onclick="goHome()">
+                    Обратно към картата
+                </button>
+            `;
+            updateProgressDots(-1);
+            saveProgress();
         }
 
         function updateProgressDots(currentIndex) {
-        const progressDots = document.getElementById('progressDots');
-        const levelLessons = lessonsData[currentLevel] || [];
+            const progressDots = document.getElementById('progressDots');
+            const levelLessons = lessonsData[currentLevel] || [];
 
-        progressDots.innerHTML = '';
+            progressDots.innerHTML = '';
 
-        // Support up to 20 questions per lesson
-        const maxDots = Math.min(levelLessons.length, 20);
-        for (let i = 0; i < maxDots; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'progress-dot';
+            const maxDots = Math.min(levelLessons.length, 20);
+            for (let i = 0; i < maxDots; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
 
-        if (i < currentIndex) {
-        dot.classList.add('completed');
-        } else if (i === currentIndex) {
-        dot.classList.add('active');
+                if (i < currentIndex) {
+                    dot.classList.add('completed');
+                } else if (i === currentIndex) {
+                    dot.classList.add('active');
+                }
+
+                progressDots.appendChild(dot);
+            }
         }
 
-        progressDots.appendChild(dot);
-        }
-        }
-
-        // Initialize on load
         window.addEventListener('load', () => {
-        loadProgress();
-        // If user was in a lesson, resume at last question
-        if (typeof currentLevel === 'number' && lessonsData[currentLevel] && typeof currentLessonIndex === 'number' && currentLessonIndex < lessonsData[currentLevel].length) {
-        document.getElementById('mapContainer').classList.add('hidden');
-        document.getElementById('mainContainer').classList.remove('hidden');
-        document.getElementById('navButtons').classList.remove('hidden');
-        loadLesson();
-        } else {
-        document.getElementById('mapContainer').classList.remove('hidden');
-        initializeMap();
-        }
+            loadProgress();
+            if (typeof currentLevel === 'number' && lessonsData[currentLevel] && typeof currentLessonIndex === 'number' && currentLessonIndex < lessonsData[currentLevel].length) {
+                document.getElementById('mapContainer').classList.add('hidden');
+                document.getElementById('mainContainer').classList.remove('hidden');
+                document.getElementById('navButtons').classList.remove('hidden');
+                loadLesson();
+            } else {
+                document.getElementById('mapContainer').classList.remove('hidden');
+                initializeMap();
+            }
 
-        // Start fish animation
-        setInterval(fishJump, 2000);
+            setInterval(fishJump, 2000);
 
-        // Handle window resize
-        window.addEventListener('resize', initializeMap);
+            window.addEventListener('resize', initializeMap);
         });
 
-        // Handle browser back button
         window.addEventListener('popstate', function(event) {
-        goHome();
+            goHome();
         });
     </script>
 </body>
