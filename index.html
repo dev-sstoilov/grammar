@@ -278,9 +278,11 @@
             text-align: center;
             direction: ltr;
         }
-
+        
         .drop-zone {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             min-width: 120px;
             height: 70px;
             background: rgba(30, 136, 229, 0.1);
@@ -1044,19 +1046,20 @@
                 initializeCharCorrection(lesson.wrongCharIndex, lesson.correctChar, lesson.word);
             }
         }
-
-        function renderSentenceWithDropZones(sentence, dropZoneCount) {
-            const parts = sentence.split(/{[^}]+}/g);
-            let result = '';
-
-            for (let i = 0; i < parts.length; i++) {
-                result += parts[i];
-                if (i < dropZoneCount) {
-                    result += `<span class="drop-zone" data-index="${i}"></span>`;
-                }
+        
+    function renderSentenceWithDropZones(sentence, dropZoneCount) {
+        const parts = sentence.split(/{[^}]+}/g);
+        let result = '<div style="display: inline-block; text-align: center;">';
+    
+        for (let i = 0; i < parts.length; i++) {
+            result += parts[i];
+            if (i < dropZoneCount) {
+                result += `<span class="drop-zone" data-index="${i}"></span>`;
             }
-            return result;
         }
+        result += '</div>';
+        return result;
+    }
 
         function renderSentenceWithClickableWords(sentence, options) {
             const words = sentence.split(' ');
